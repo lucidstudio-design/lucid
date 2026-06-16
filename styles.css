@@ -1233,6 +1233,7 @@ img { display: block; max-width: 100%; }
 @media (max-width: 760px) {
   .hero { --hero-gap: clamp(60px, 8vh, 96px); }
   .hero-headline .line { white-space: normal; }
+  .hero-eyebrow .eyebrow-row { align-items: center; text-align: center; }
   .hero-bg::before {
     /* Portrait nebula: rotate the landscape image to vertical and size it to the
        full hero (100vh×100vw → hero after the 90° turn) with cover, so it spans
