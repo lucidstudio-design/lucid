@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lucid | Works</title>
+<link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)" />
+<link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css?v=33" />
+<link id="gfont-Playfair-Display" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&amp;display=swap">
+<meta name="ext-resource-dependency" content="film/unbound-loop.html" data-resource-id="unboundLoop" />
+<meta name="ext-resource-dependency" content="film/into-focus.html" data-resource-id="intoFocus" />
+<meta name="ext-resource-dependency" content="film/carwash-mx.html" data-resource-id="carwashFilm" />
+<meta name="ext-resource-dependency" content="film/flor-tierra.html" data-resource-id="florFilm" />
+<meta name="ext-resource-dependency" content="film/abimerhi.html" data-resource-id="abimerhiFilm" />
+</head>
+<body class="works-page" data-nav-active="portfolio">
+
+<template id="__bundler_thumbnail" data-bg-color="#000000">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#000000"/>
+    <g fill="none" stroke="#8A84E2" stroke-width="6">
+      <circle cx="600" cy="400" r="150"/>
+      <circle cx="600" cy="400" r="110"/>
+    </g>
+    <path d="M600 250 L628 372 L750 400 L628 428 L600 550 L572 428 L450 400 L572 372 Z" fill="#8A84E2"/>
+    <circle cx="600" cy="400" r="34" fill="#000000" stroke="#B7D3F2" stroke-width="6"/>
+  </svg>
+</template>
+
+<!-- ========== NAV ========== -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html" aria-label="Lucid home"><img src="assets/lucid-blue.png" alt="Lucid" style="height: 45px; width: auto" /></a>
+  <div class="nav-links" id="navLinks">
+    <a href="index.html#about" data-label="About" data-spy="#about">About</a>
+    <a href="index.html#services-anchor" data-label="Services" data-spy="#services-anchor">Services</a>
+    <a href="works.html" data-label="Portfolio" data-spy="#work-anchor" data-nav="portfolio">Portfolio</a>
+    <a href="index.html#testimonials" data-label="Testimonials" data-spy="#testimonials">Testimonials</a>
+  </div>
+  <div class="nav-right">
+    <button class="lang-toggle" id="langToggle" type="button" role="switch" aria-checked="false" aria-label="Switch language to Spanish" data-cursor="cta">
+      <span class="lang-label lang-en">EN</span>
+      <span class="lang-switch">
+        <span class="lang-knob">
+          <svg class="flag flag-uk" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <clipPath id="ukClip"><rect width="60" height="30"></rect></clipPath>
+            <g clip-path="url(#ukClip)">
+              <rect width="60" height="30" fill="#012169"></rect>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="7"></path>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="3"></path>
+              <rect x="25" width="10" height="30" fill="#ffffff"></rect>
+              <rect y="10" width="60" height="10" fill="#ffffff"></rect>
+              <rect x="27" width="6" height="30" fill="#C8102E"></rect>
+              <rect y="12" width="60" height="6" fill="#C8102E"></rect>
+            </g>
+          </svg>
+          <svg class="flag flag-es" viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect width="60" height="40" fill="#AA151B"></rect>
+            <rect y="10" width="60" height="20" fill="#F1BF00"></rect>
+          </svg>
+        </span>
+      </span>
+      <span class="lang-label lang-es">ES</span>
+    </button>
+    <a href="index.html#contact" class="nav-cta" data-cursor="cta">Contact <span class="arrow">↗</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks" data-cursor="cta">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<header class="works-top" data-screen-label="Portfolio">
+  <div class="works-hero">
+    <div class="works-hero-text">
+      <div class="eyebrow"><span class="eyebrow-row"><svg class="eyebrow-spark" viewBox="0 0 24 24" aria-hidden="true"><path class="s-core" d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/></svg>Our work</span></div>
+      <h1 class="works-title">Portfolio</h1>
+      <p class="works-lead">Every Lucid project begins with a small business and a big idea. Explore the brands we've designed, built, and brought into focus.</p>
+    </div>
+    <div class="works-filmchip" aria-hidden="true">
+      <iframe title="Lucid — Into Focus" tabindex="-1" scrolling="no" loading="lazy" src="film/into-focus.html"></iframe>
+    </div>
+  </div>
+</header>
+
+<!-- ========== FILTERS ========== -->
+<div class="works-filter-wrap">
+  <div class="works-filter" id="worksFilter">
+    <button data-filter="all" class="is-active">Explore all <span class="count">4</span></button>
+    <button data-filter="brand">Brand Identity <span class="count">1</span></button>
+    <button data-filter="web">Web Production <span class="count">4</span></button>
+    <button data-filter="motion">Motion &amp; Visuals <span class="count">2</span></button>
+  </div>
+</div>
+
+<!-- ========== GRID ========== -->
+<div class="works-grid-wrap">
+  <div class="works-grid" id="worksGrid">
+
+    <!-- 01 — UNbound (hover plays the loop film) -->
+    <article class="case case--hoverplay" data-cats="brand web motion" data-loop-src="film/unbound-loop.html" data-loop-res="unboundLoop">
+      <div class="case-art">
+        <span class="case-badge">01</span>
+        <iframe class="case-embed" title="UNbound loop" tabindex="-1" scrolling="no" aria-hidden="true"></iframe>
+        <img class="case-thumb" src="assets/unbound-thumbnail.jpg" alt="UNbound website homepage" />
+      </div>
+      <div class="case-meta">
+        <div class="case-tag">International Non-Profit</div>
+        <h3><em>UNbound</em> Youth Initiative</h3>
+        <p class="case-desc">A website and brand identity that scaled their student project into a global movement.</p>
+        <div class="case-services">
+          <span class="chip">Brand Identity</span>
+          <span class="chip">Web Design</span>
+          <span class="chip">Logo Design</span>
+          <span class="chip">UI Animation</span>
+        </div>
+        <a href="https://unboundyi.org" target="_blank" rel="noopener" class="case-visit" data-cursor="cta">Visit site <span class="arrow">↗</span></a>
+      </div>
+    </article>
+
+    <!-- 02 — CarWash MX -->
+    <article class="case case--hovervid" data-cats="web">
+      <div class="case-art">
+        <span class="case-badge">02</span>
+        <video class="case-vid" muted loop playsinline preload="none" poster="assets/carwash-thumbnail.png">
+          <source src="film/carwashmx.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="case-meta">
+        <div class="case-tag">Premium Auto Care</div>
+        <h3><em>CarWash</em> MX</h3>
+        <p class="case-desc">A digital home that took a single-location business and gave it a client experience driving retention.</p>
+        <div class="case-services">
+          <span class="chip">Web Production</span>
+          <span class="chip">Built for client engagement</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 — Flor Tierra -->
+    <article class="case case--hovervid" data-cats="web motion">
+      <div class="case-art">
+        <span class="case-badge">03</span>
+        <video class="case-vid" muted loop playsinline preload="none" poster="assets/flor-tierra.png">
+          <source src="film/flortierra.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="case-meta">
+        <div class="case-tag">Artesanal Snacks</div>
+        <h3><em>Flor</em> Tierra</h3>
+        <p class="case-desc">A Mexican homemade snack maker with an online store as wholesome as its ingredients.</p>
+        <div class="case-services">
+          <span class="chip">Responsive web design</span>
+          <span class="chip">E-commerce</span>
+          <span class="chip">Icons &amp; illustrations</span>
+        </div>
+        <a href="https://flortierra.com" target="_blank" rel="noopener" class="case-visit" data-cursor="cta">Visit site <span class="arrow">↗</span></a>
+      </div>
+    </article>
+
+    <!-- 04 — Abimerhi Consultores -->
+    <article class="case case--hovervid" data-cats="web">
+      <div class="case-art">
+        <span class="case-badge">04</span>
+        <video class="case-vid" muted loop playsinline preload="none" poster="assets/abimerhi.png">
+          <source src="film/abimerhi.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="case-meta">
+        <div class="case-tag">Financial Consulting</div>
+        <h3><em>Abimerhi</em> Consultores</h3>
+        <p class="case-desc">A Mexican consulting firm elevated by a commanding digital presence built to win trust on arrival.</p>
+        <div class="case-services">
+          <span class="chip">Responsive web design</span>
+          <span class="chip">Immersive visuals</span>
+          <span class="chip">Built for client engagement</span>
+        </div>
+        <a href="https://abimerhiconsultores.com" target="_blank" rel="noopener" class="case-visit" data-cursor="cta">Visit site <span class="arrow">↗</span></a>
+      </div>
+    </article>
+
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer class="foot">
+  <div class="foot-logo"><img src="assets/lucid-blue.png" alt="Lucid" /></div>
+  <nav class="foot-nav">
+    <a href="index.html#about">About</a>
+    <a href="index.html#services-anchor">Services</a>
+    <a href="works.html">Portfolio</a>
+    <a href="index.html#testimonials">Testimonials</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <div class="foot-social">
+    <a href="mailto:lucid.studio.hq@gmail.com" data-cursor="cta">lucid.studio.hq@gmail.com</a>
+  </div>
+  <div class="foot-bottom">
+    <span>© Lucid 2026. All rights reserved.</span>
+    <span>Small businesses, big ideas.</span>
+  </div>
+</footer>
+
+<script>
+/* Category filter — fades the grid down to the projects matching a category. */
+(function () {
+  var btns = [].slice.call(document.querySelectorAll('.works-filter button'));
+  var cards = [].slice.call(document.querySelectorAll('.works-grid .case'));
+  function apply(f) {
+    cards.forEach(function (c) {
+      var cats = (c.dataset.cats || '').split(/\s+/);
+      c.classList.toggle('is-hidden', !(f === 'all' || cats.indexOf(f) !== -1));
+    });
+    btns.forEach(function (b) { b.classList.toggle('is-active', b.dataset.filter === f); });
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.filter); }); });
+})();
+</script>
+<script src="js/cursor.js?v=2"></script>
+<script src="js/reveals.js?v=39"></script>
+<script src="js/i18n.js?v=1"></script>
+</body>
+</html>

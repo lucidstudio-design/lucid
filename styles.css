@@ -1,0 +1,1639 @@
+/* ---------- Lucid styles ---------- */
+@font-face {
+  font-family: "Ruigslay";
+  src: url("assets/Ruigslay.otf") format("opentype"),
+       url("assets/Ruigslay.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --bg: #000000;
+  --text: #F5F5F5;
+  --periwinkle: #8A84E2;
+  --periwinkle-l: #BCB7F1;
+  --periwinkle-d: #6f68d4;
+  --icy: #B7D3F2;
+  --maya: #79BEEE;
+  --surface: #1A1A1A;
+  --surface-2: #141414;
+  --muted: #888888;
+  --border: #2A2A2A;
+  --display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --accent: "Ruigslay", "Cormorant Garamond", serif;
+  --body: "DM Sans", "Inter", system-ui, sans-serif;
+  /* Fluid page gutter: equals 96px on full desktop (≥1371px) and tucks in as the
+     viewport narrows, so content is never squeezed against fixed margins. */
+  --gutter: clamp(28px, 7vw, 96px);
+  /* Fluid VERTICAL rhythm — both tokens reach their full desktop value at the
+     same ≥1371px point as the gutter, then shrink proportionally with the
+     viewport so the spacing between sections stays consistent and never balloons
+     relative to the content as the browser narrows. Full-desktop values are
+     unchanged (108px section padding / 71px header→content gap). */
+  --vpad: clamp(56px, 7.9vw, 108px);
+  --head-gap: clamp(44px, 5.2vw, 71px);
+  /* Shared section-header size (used by About / Services / Portfolio / Testimonials
+     / Contact) so headers are identical at every width; ~20% larger than before
+     across the narrow range, with the 88px desktop cap unchanged. */
+  --h2: clamp(48px, 7vw, 88px);
+  /* Gap from a carousel's card container to its relocated arrow/CTA controls
+     (Portfolio foot + Testimonials below-row), kept equal between the two. */
+  --ctrl-gap: clamp(28px, 4vw, 44px);
+  /* Caps section content width and centres it (the Contact section's model) so
+     the layout never stretches out of proportion when the browser is zoomed out
+     or on very wide displays. Below ~1592px the gutter still binds, so normal
+     desktops are unchanged. */
+  --content-max: 1400px;
+}
+
+/* fragment-navigation offsets so section headings clear the fixed nav */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.about, .testimonials, .contact { scroll-margin-top: 108px; }
+#services-anchor, #work-anchor { scroll-margin-top: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+html, body, * { cursor: none !important; }
+/* Touch / mobile: no pointer at all, so restore the native cursor behaviour and
+   never show the custom cursor. */
+@media (hover: none), (pointer: coarse) {
+  html, body, * { cursor: auto !important; }
+  .cursor-ring, .cursor-dot { display: none !important; }
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; }
+img { display: block; max-width: 100%; }
+
+.eyebrow {
+  font-family: var(--body);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+/* accent display font for emphatic words.
+   Ruigslay's cap-height runs ~1.3x taller than Cormorant at the same px, so we
+   size every Ruigslay run at 0.78em of its surrounding Cormorant. Because the
+   value is in em, it scales in lockstep when the heading scales with the
+   viewport — caps line up and there are no rogue line breaks. */
+.accent {
+  font-family: var(--accent);
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0.01em;
+  font-size: 0.78em;
+}
+/* Ruigslay emphasis inside section headers — keeps the inherited color, drops italics */
+.rui {
+  font-family: var(--accent) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.01em;
+  font-size: 0.78em;
+}
+
+/* looping mini star next to section eyebrows */
+.eyebrow-row { display: inline-flex; align-items: center; gap: 10px; }
+.eyebrow-spark {
+  width: 16px; height: 16px;
+  display: inline-block;
+  color: var(--periwinkle);
+  flex: none;
+}
+.eyebrow-spark .s-core { transform-box: fill-box; transform-origin: center; animation: sparkPulse 2.6s ease-in-out infinite; }
+.eyebrow-spark .s-core.b { animation-delay: 1.3s; animation-duration: 3.2s; }
+@keyframes sparkPulse {
+  0%, 100% { transform: scale(0.55) rotate(0deg); opacity: 0.35; }
+  50% { transform: scale(1) rotate(45deg); opacity: 1; }
+}
+.about .eyebrow-spark, .portfolio-overlay .eyebrow-spark { color: var(--periwinkle); }
+.vision-eyebrow .eyebrow-spark { color: #000000; }
+
+/* ---------- nav ---------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  /* Background + border span the full width, but the logo / links / CTA are
+     confined to the same centred content-max column as every section, so on a
+     zoomed-out / ultrawide screen they don't fly out to the very edges. Below
+     ~1512px the max() picks the normal 56px padding, so desktop is unchanged. */
+  padding: 28px max(56px, calc((100% - var(--content-max)) / 2));
+  background: #000000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.nav-logo { display: inline-flex; align-items: center; cursor: pointer; text-decoration: none; flex: none; }
+.nav-logo img { height: 36px; width: auto; max-width: none; flex: none; display: block; }
+.nav-links {
+  display: flex; gap: 44px;
+  justify-content: center;
+  font-size: 19px; line-height: 1.2; color: #cfcfcf;
+}
+.nav-links a { position: relative; transition: color 0.3s ease; }
+/* reserve the bold width so activating a link never shifts its neighbours */
+.nav-links a::before {
+  content: attr(data-label);
+  display: block; height: 0; overflow: hidden; visibility: hidden;
+  font-weight: 600;
+}
+/* active-section underline — wipes in left→right, wipes away left→right */
+.nav-links a::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -7px;
+  height: 2px; background: var(--maya); border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.45s cubic-bezier(.22,.8,.36,1);
+}
+.nav-links a:hover { color: var(--periwinkle); }
+.nav-links a.nav-active { color: var(--maya); font-weight: 600; }
+.nav-links a.nav-active::after { transform: scaleX(1); transform-origin: left center; }
+/* scrolling UP reverses the wipe to right→left: the underline draws in from the
+   right edge and erases toward the left. */
+.nav-links.nav-up a::after { transform-origin: left center; }
+.nav-links.nav-up a.nav-active::after { transform-origin: right center; }
+.nav-right { display: flex; justify-content: flex-end; }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 9px 22px; border-radius: 999px;
+  border: 1px solid var(--periwinkle);
+  background: rgba(0,0,0, 0.8);
+  color: var(--text); font-size: 19px;
+  transition: background 0.35s ease, color 0.35s ease;
+  position: relative;
+}
+.nav-cta:hover { background: var(--periwinkle); color: #000000; }
+.nav-cta .arrow { display: inline-block; transition: transform 0.4s cubic-bezier(.22,.8,.36,1); transform: rotate(45deg); }
+.nav-cta:hover .arrow { transform: rotate(0deg); }
+.nav-right { display: flex; align-items: center; gap: 22px; }
+/* hamburger — hidden until the link row no longer fits */
+.nav-toggle {
+  display: none;
+  width: 46px; height: 46px; flex: none;
+  border: 1px solid var(--border); border-radius: 50%;
+  align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.nav-toggle:hover { border-color: var(--periwinkle); }
+.nav-toggle span {
+  display: block; width: 18px; height: 1.5px; background: var(--text);
+  transition: transform 0.32s cubic-bezier(.22,.8,.36,1), opacity 0.2s ease;
+}
+.nav.open .nav-toggle span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav.open .nav-toggle span:nth-child(2) { opacity: 0; }
+.nav.open .nav-toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative; min-height: min(100vh, 1100px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  /* top padding = nav height + the gap, so the gap above the eyebrow matches the
+     gap below the CTA (before the marquee) on every viewport height. */
+  --hero-gap: clamp(96px, 11vh, 124px);
+  padding: calc(104px + var(--hero-gap)) 32px var(--hero-gap);
+  text-align: center; overflow: hidden;
+  background: #000000;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden;
+  /* deep-space fallback so the hero is never pure black if the nebula ever fails */
+  background: radial-gradient(120% 90% at 50% 18%, #2b2f52 0%, #14162e 46%, #05060f 100%);
+}
+/* nebula as a REAL <img> (object-fit:cover): painted reliably at any browser
+   zoom / DPR / orientation, unlike a pseudo-element background which the engine
+   can drop at extreme zoom and leave the hero black. */
+.hero-bg-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+}
+.hero-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.9) 100%);
+}
+.hero-canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; }
+.hero-glow {
+  position: absolute; left: 50%; top: 48%;
+  width: 1100px; height: 1100px;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(closest-side, rgba(138, 132, 226, 0.22), rgba(138, 132, 226, 0) 70%),
+    radial-gradient(closest-side, rgba(121, 190, 238, 0.12), rgba(121, 190, 238, 0) 70%);
+  filter: blur(20px); z-index: 1; pointer-events: none;
+  animation: breathe 7s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  max-width: 1200px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 30px;
+}
+.hero-headline {
+  font-family: var(--display); font-weight: 500;
+  font-size: clamp(58px, 9vw, 138px);
+  line-height: 1.06; letter-spacing: -0.025em;
+  word-spacing: 0.1em;
+  text-shadow: 0 2px 26px rgba(0,0,0,0.44), 0 1px 3px rgba(0,0,0,0.36);
+}
+.hero-headline .line { display: block; white-space: nowrap; }
+.hero-headline em { font-style: italic; color: var(--icy); font-weight: 500; }
+.hero-headline em.accent { font-style: normal; font-weight: 400; font-size: 0.78em; line-height: 1; letter-spacing: 0.01em; vertical-align: baseline; }
+.hero-headline .word {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero.is-loaded .hero-headline .word {
+    animation: wordBlurIn 1.1s cubic-bezier(.22,.8,.36,1) both;
+  }
+}
+.hero-headline .line:nth-child(1) .word:nth-child(1) { animation-delay: 0.10s; }
+.hero-headline .line:nth-child(1) .word:nth-child(2) { animation-delay: 0.24s; }
+.hero-headline .line:nth-child(1) .word:nth-child(3) { animation-delay: 0.38s; }
+.hero-headline .line:nth-child(2) .word:nth-child(1) { animation-delay: 0.52s; }
+.hero-headline .line:nth-child(2) .word:nth-child(2) { animation-delay: 0.66s; }
+.hero-headline .line:nth-child(2) .word:nth-child(3) { animation-delay: 0.80s; }
+.hero-headline .line:nth-child(2) .word:nth-child(4) { animation-delay: 0.94s; }
+.hero-headline .line:nth-child(3) .word:nth-child(1) { animation-delay: 1.10s; }
+@keyframes wordBlurIn {
+  0% { filter: blur(18px); opacity: 0; transform: translateY(10px); }
+  100% { filter: blur(0); opacity: 1; transform: translateY(0); }
+}
+/* wall-clock fallback (see reveals.js): guarantees the headline is visible even
+   if the CSS animation timeline stalls. */
+.hero.hero-anim-settled .hero-headline .word {
+  animation: none !important;
+  opacity: 1 !important; filter: none !important; transform: none !important;
+}
+.hero-sub {
+  font-size: clamp(17px, 1.7vw, 23px);
+  color: #cfcfcf; max-width: 700px; line-height: 1.5;
+  text-shadow: 0 2px 26px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.45);
+}
+.hero-eyebrow { font-size: 14px; margin-bottom: -8px; text-shadow: 0 2px 26px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.45); }
+/* Keep the looping spark beside "Lucid Studio" and level with the FIRST line when
+   the eyebrow text wraps on a narrow screen (instead of the spark floating to the
+   vertical centre of the wrapped block). text-align:left makes the wrapped text
+   hug the spark so the gap can't grow as the viewport compresses. */
+.hero-eyebrow .eyebrow-row { align-items: flex-start; text-align: left; }
+.hero-eyebrow .eyebrow-spark { margin-top: 1px; }
+/* hero CTA carries the same drop shadow as the headline */
+.hero .btn { font-size: clamp(17px, 1.7vw, 23px); box-shadow: 0 2px 26px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.45); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 18px 28px; border-radius: 999px;
+  background: var(--periwinkle); color: #000000;
+  /* CTA shrinks in step with the headings as the viewport narrows (capped at the
+     15px desktop size) so the type hierarchy stays proportional. */
+  font-size: clamp(13px, 1.05vw, 15px); font-weight: 500;
+  border: 1px solid transparent;
+  transition: background 0.35s ease, color 0.35s ease;
+  position: relative; will-change: transform;
+}
+.btn:hover { background: var(--icy); }
+.btn .arrow { display: inline-block; transition: transform 0.4s cubic-bezier(.22,.8,.36,1); transform: rotate(45deg); }
+.btn:hover .arrow { transform: rotate(0deg); }
+.btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn-ghost:hover { background: rgba(138, 132, 226, 0.1); border-color: var(--periwinkle); color: var(--text); }
+.arrow { font-family: var(--body); font-weight: 400; font-size: 1.05em; line-height: 1; }
+
+/* ---------- marquee ---------- */
+.marquee {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 0; overflow: hidden; white-space: nowrap;
+  background: #000000;
+}
+.marquee-track {
+  display: inline-flex; gap: 56px;
+  animation: marquee 38s linear infinite;
+  font-family: var(--display); font-size: clamp(28px, 4vw, 56px);
+}
+.marquee-track span { display: inline-flex; align-items: center; gap: 56px; }
+.marquee-track .star { color: var(--periwinkle); font-size: 0.7em; }
+.marquee-track em { font-style: italic; }
+/* strict alternation: regular + white, then italic + colored */
+.marquee-track .m-reg { color: var(--text); font-style: normal; }
+.marquee-track .m-acc { color: var(--periwinkle); font-style: italic; }
+@keyframes marquee {
+  from { transform: translateX(0); } to { transform: translateX(-50%); }
+}
+
+/* ---------- about ---------- */
+/* Natural-height section (bottom cut to the content). It pins (sticky) while the
+   film panel that follows rides up over it — a smooth cover with no scroll dead
+   zone. Bottom padding = 108px, matching the top gap from the marquee to the
+   About Us label, so the gap from the graphic down to the film is the same. */
+.about {
+  background: var(--icy);
+  color: #000000;
+  width: 100%;
+  padding: var(--vpad) var(--gutter);
+  position: sticky; top: 0;
+  z-index: 1;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+/* When the About is taller than the viewport (zoom-in / short window), JS adds
+   .about--flat: it leaves sticky so it scrolls fully BEFORE the film rides over
+   it — the film can never cover text the user hasn't reached yet. Otherwise the
+   About is its NATURAL height (content-driven) and pins (sticky) while the film
+   rides up over it — a smooth cover with no scroll dead zone, and no huge
+   letterbox margins when the browser is zoomed out. */
+.about.about--flat { position: static; }
+.about-inner { max-width: var(--content-max); margin: 0 auto; width: 100%; display: flex; flex-direction: column; min-height: 0; }
+.about .eyebrow { color: #1a1a1a; opacity: 0.7; }
+.about-eyebrow { margin-bottom: 22px; }  /* label→header gap matches the Testimonials eyebrow→header gap */
+.about-quote {
+  font-family: var(--display); font-weight: 500;
+  font-size: var(--h2);
+  line-height: 1.12; letter-spacing: -0.02em;
+  /* header→text gap matches the Testimonials header→cards gap (fluid) so the
+     About rhythm (edge→label→header→text) is identical to Testimonials. */
+  margin-bottom: var(--head-gap); max-width: 100%;
+  color: #000000;
+}
+.about-quote em, .about-quote .rui { color: var(--periwinkle); font-style: italic; }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 0.92fr;
+  gap: 72px; align-items: start;
+}
+.about-body {
+  display: flex; flex-direction: column;
+  gap: 26px;
+  position: relative; z-index: 2;
+}
+.about-body p { font-size: clamp(14px, 1.2vw, 18px); line-height: 1.7; color: #1a1a1a; }
+.about-cta { align-self: flex-start; margin-top: 8px; }
+.about-cta:hover { background: #ffffff; }
+/* Ev1 layout: the illustration column stretches to the height of the text
+   column, but starts 23px ABOVE it — so the graphic sits closer to the header
+   (48px) than the text does (71px). The image is bottom-anchored inside that
+   box, so its very bottom always lands on the same horizontal axis as the
+   bottom of the CTA, and it scales down to fit (never cropped, never spilling
+   into the section's margins). */
+.about-illo {
+  position: relative; align-self: stretch; min-width: 0;
+  margin-top: -23px;
+}
+.about-illo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+/* line-rise: animate the block itself; descenders never clipped */
+.rise-line {
+  display: block;
+  transform: translateY(40px);
+  opacity: 0;
+  transition: transform 1s cubic-bezier(.2,.7,.2,1), opacity 1s cubic-bezier(.2,.7,.2,1);
+  will-change: transform, opacity;
+}
+.rise-line > span { display: inline; }
+.rise-line.in { transform: translateY(0); opacity: 1; }
+.about .rise-line > span { color: #000000; }
+
+.rise-block {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(.22,.8,.36,1), transform 0.9s cubic-bezier(.22,.8,.36,1);
+}
+.rise-block.in { opacity: 1; transform: translateY(0); }
+
+/* ---------- about: wireframe build-in ---------- */
+.about-inner { position: relative; }
+/* real content sits above the wireframe wash */
+.about-eyebrow, .about-quote, .about-body, .about-illo { position: relative; z-index: 2; }
+.about-quote .aq-line { display: block; }
+.b-rel { position: relative; }
+.cta-rel { align-self: flex-start; margin-top: 8px; display: inline-flex; }
+.about-cta { margin-top: 0; }
+
+/* while the build is arming/running: section inverts to black, real pieces hide */
+.about.is-wiring { background-color: #000000; }
+.about.is-wiring [data-build] { opacity: 0; }
+/* The cover's icy backstop (revealed through the film panel's rounded corners)
+   also starts black and animates to icy with the About, so the corners behind
+   the video take part in the load-in instead of staying icy from the start. */
+.about-cover.is-wiring { background-color: #000000; }
+
+/* ---- per-block skeleton (ice-blue, shimmering) ---- */
+.skel {
+  position: absolute; inset: 0; z-index: 3; opacity: 0;
+  pointer-events: none;
+  display: flex; flex-direction: column; justify-content: center; gap: 0.42em;
+}
+.skel-eyebrow { flex-direction: row; align-items: center; gap: 12px; justify-content: flex-start; }
+.skel-quote { justify-content: center; gap: 0.34em; }
+.skel-para { justify-content: flex-start; gap: 0.62em; padding-top: 0.15em; }
+.skel-cta { justify-content: center; }
+.sb {
+  height: 0.72em; border-radius: 6px; flex: none;
+  background-color: rgba(183, 211, 242, 0.14);
+  background-image: linear-gradient(100deg,
+    rgba(183, 211, 242, 0.05) 18%,
+    rgba(183, 211, 242, 0.55) 50%,
+    rgba(183, 211, 242, 0.05) 82%);
+  background-size: 220% 100%; background-repeat: no-repeat;
+  animation: wireShimmer 1.7s linear infinite;
+}
+.skel-quote .sb { height: 0.66em; border-radius: 8px; }
+.sb-dot { width: 16px; height: 16px; border-radius: 50%; }
+.skel-cta .sb-pill {
+  display: block; width: 196px; height: 56px; border-radius: 999px;
+  border: 1.5px solid rgba(183, 211, 242, 0.5);
+  background-image: linear-gradient(100deg,
+    rgba(183, 211, 242, 0.03) 18%,
+    rgba(183, 211, 242, 0.32) 50%,
+    rgba(183, 211, 242, 0.03) 82%);
+  background-size: 220% 100%; background-repeat: no-repeat;
+  animation: wireShimmer 1.7s linear infinite;
+}
+@keyframes wireShimmer {
+  0%   { background-position: 220% 0; }
+  100% { background-position: -120% 0; }
+}
+
+/* ---- illustration wireframe diagram → crossfades to the image ---- */
+.illo-wire { position: absolute; inset: 0; z-index: 3; opacity: 0; pointer-events: none;
+  display: flex; align-items: flex-end; justify-content: center; }
+.iw-svg { width: 100%; height: 100%; }
+.iw-frame, .iw-grid, .iw-orbit { stroke: rgba(183, 211, 242, 0.55); stroke-width: 1.4; fill: none; }
+.iw-grid { stroke: rgba(183, 211, 242, 0.28); }
+.iw-orbit { stroke: rgba(183, 211, 242, 0.6); }
+.iw-node { fill: var(--periwinkle); stroke: none; }
+
+/* ---- full-section wireframe wash ---- */
+.about-wire { position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; overflow: hidden; }
+.wire-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(183, 211, 242, 0.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(183, 211, 242, 0.10) 1px, transparent 1px);
+  background-size: 88px 88px;
+}
+.wire-sweep {
+  position: absolute; top: -20%; bottom: -20%; left: 0; width: 46%;
+  transform: skewX(-14deg) translateX(-160%);
+  background: linear-gradient(100deg, transparent, rgba(183, 211, 242, 0.16) 50%, transparent);
+  animation: wireSweep 2.4s ease-in-out infinite;
+}
+@keyframes wireSweep {
+  0%   { transform: skewX(-14deg) translateX(-160%); }
+  100% { transform: skewX(-14deg) translateX(360%); }
+}
+
+/* ---------- about + into-focus ----------
+   The film is a full-bleed section of its own: full viewport width, 16:9, with
+   rounded corners top and bottom as the only crop. The About before it is
+   sticky, so the film parallaxes smoothly OVER the About as you scroll — no
+   hold, no dead zone, 1:1 with the scroll. */
+.about-cover {
+  position: relative;
+  /* Icy backstop so the film panel's TOP rounded corners reveal the About's ice
+     blue (a smooth rounded edge) rather than a black rectangular underlay. The
+     bottom corners are covered separately by ::after (onyx) where the film meets
+     the dark Services. */
+  background: var(--icy);
+  z-index: 2;
+}
+/* Onyx backstop behind the film panel's bottom rounded corners: without it the
+   sticky (icy) About shows through the corner notches where the film meets the
+   Services section. Paints above the sticky About (z:1, later in tree order)
+   and below the film (z:2). */
+.about-cover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 90px;
+  background: #000000;
+  z-index: 1;
+  pointer-events: none;
+}
+.into-focus {
+  position: relative;
+  z-index: 2;               /* rides above the sticky About */
+  width: 100%;
+  aspect-ratio: 16 / 9;     /* same proportions as the clip's stage — always */
+  background: #0a0e1c;
+  border-radius: 40px;
+  overflow: hidden;         /* crops only the corners */
+}
+.film-frame {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0; display: block;
+  background: #0a0e1c;
+  /* JS maps the clip's inner 16:9 stage exactly onto this panel (uniform
+     translate+scale): edge-to-edge, control bar pushed off the bottom. */
+  pointer-events: none;        /* can't be paused or scrubbed */
+}
+
+/* ---------- color band ---------- */
+.band {
+  background: var(--icy);
+  color: #000000;
+  padding: 80px 48px;
+  position: relative; overflow: hidden;
+  border-radius: 0 0 40px 40px;
+  z-index: 2;
+}
+.band-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.3fr 1fr;
+  gap: 60px; align-items: center;
+}
+.band h2 {
+  font-family: var(--display); font-weight: 500;
+  font-size: clamp(36px, 5vw, 76px);
+  line-height: 1.05; letter-spacing: -0.02em;
+}
+.band h2 em { font-style: italic; color: var(--periwinkle); }
+.band p { font-size: 17px; line-height: 1.65; max-width: 460px; color: #1a1a1a; }
+.band-stats {
+  margin-top: 28px; display: grid;
+  grid-template-columns: 1fr 1fr; gap: 24px;
+  border-top: 1px solid rgba(0,0,0,0.18); padding-top: 24px;
+}
+.band-stat .num {
+  font-family: var(--display); font-style: italic;
+  font-size: 56px; line-height: 1; color: var(--periwinkle);
+}
+.band-stat .lbl { font-size: 13px; letter-spacing: 0.06em; color: #1a1a1a; opacity: 0.8; margin-top: 6px; }
+.band-graphic { display: flex; justify-content: center; }
+.band-graphic svg { max-width: 100%; height: auto; }
+
+/* ---------- services ---------- */
+.services-section {
+  background: var(--bg);
+  padding: 80px 48px 100px;
+  position: relative;
+  z-index: 1;
+  border-radius: 0 0 40px 40px;
+}
+.services-inner { max-width: none; margin: 0 auto; }
+.services-head {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: 60px; margin-bottom: 114px; align-items: end;
+}
+.services-head h2 {
+  font-family: var(--display); font-weight: 500;
+  font-size: var(--h2);
+  line-height: 1.12; letter-spacing: -0.02em;
+}
+.services-head h2 em { color: var(--icy); font-style: italic; }
+.services-head .lead {
+  color: #cfcfcf; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.7; max-width: 460px;
+}
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.service-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: clamp(20px, 1.8vw, 34px);
+  display: flex; flex-direction: column; justify-content: center;
+  min-height: 440px;
+  font-size: 16px;   /* base — a script overrides this so the content fills the card */
+  position: relative; overflow: hidden;
+}
+.service-fit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1em; row-gap: 1.25em;
+  align-items: start;
+}
+/* number + heading stack on the left; the icon sits right-aligned, level with
+   the heading block (spanning the num + title rows). This drops the icon's old
+   standalone row, shortening each card. */
+.service-fit > .service-num { grid-column: 1; grid-row: 1; align-self: end; }
+.service-fit > h3 { grid-column: 1; grid-row: 2; }
+.service-fit > .icon-wrap { grid-column: 2; grid-row: 1 / span 2; align-self: center; justify-self: end; }
+.service-fit > p { grid-column: 1 / -1; }
+.service-fit > .service-list { grid-column: 1 / -1; }
+.service-card.alt { background: var(--icy); color: #000000; border-color: var(--icy); }
+.service-card.alt p { color: #1a1a1a; }
+.service-card.alt .service-num { color: #000000; }
+.service-card.alt .service-list { color: #1a1a1a; border-top-color: rgba(0,0,0,0.18); }
+.service-card.alt .service-list .dot { background: var(--periwinkle); }
+.service-card.alt h3 em { color: var(--periwinkle); }
+.service-card.dark-peri { background: var(--periwinkle); color: #000000; border-color: var(--periwinkle); }
+.service-card.dark-peri p { color: #1a1a1a; }
+.service-card.dark-peri .service-num { color: #000000; }
+.service-card.dark-peri .service-list { color: #1a1a1a; border-top-color: rgba(0,0,0,0.18); }
+.service-card.dark-peri .service-list .dot { background: #000000; }
+.service-card.dark-peri h3 em { color: var(--icy); }
+.service-card .icon-wrap {
+  width: 4.4em; height: 4.4em;
+  border: 1px solid var(--border);
+  border-radius: 1.05em;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.02);
+  flex: none;
+}
+.service-card .icon-wrap svg { width: 58%; height: 58%; }
+.service-card.alt .icon-wrap, .service-card.dark-peri .icon-wrap {
+  border-color: rgba(0,0,0,0.2); background: rgba(0,0,0,0.06);
+}
+.service-num { font-family: var(--display); font-style: italic; color: var(--periwinkle); font-size: 1.35em; }
+.service-card h3 {
+  font-family: var(--display); font-weight: 500;
+  font-size: 2.35em; line-height: 1.05; letter-spacing: -0.01em;
+}
+.service-card h3 em { color: var(--icy); font-style: italic; }
+.service-list {
+  display: flex; flex-direction: column; gap: 0.62em;
+  font-size: 0.9em; color: #cfcfcf;
+  border-top: 1px solid var(--border); padding-top: 1.2em; margin-top: 0;
+}
+.service-list .row { display: flex; gap: 0.7em; align-items: center; }
+.service-list .dot { width: 0.3em; height: 0.3em; border-radius: 50%; background: var(--periwinkle); flex: none; }
+.service-card p { font-size: 0.95em; line-height: 1.5; color: #b8b8b8; }
+
+/* ---------- services — redux layout (Service.png) ---------- */
+.services-redux {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: clamp(36px, 4.5vw, 88px);
+  align-items: start;
+  align-content: start;
+  font-size: clamp(13px, 1.05vw, 17.5px);   /* base unit the fit script scales */
+}
+.services-pinned .services-inner.services-redux {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: clamp(36px, 4.5vw, 88px);
+  align-items: start;
+  align-content: start;   /* natural-height block — rows are NOT spread to fill the column */
+  flex: 0 0 auto; min-height: 0;
+  /* cap content width + centre (like Contact) so the layout doesn't stretch and
+     get out of proportion when the browser is zoomed out / very wide. */
+  max-width: var(--content-max); margin-inline: auto; width: 100%;
+}
+/* services-section sits at its natural height and is centred by the pinned flex
+   parent — it must not stretch to 100vh. */
+.services-pinned .services-section { flex: 0 0 auto; }
+/* rows fill the full column height so the last row bottoms out 108px from the
+   section's bottom edge — matching the 108px top margin (no huge gap below). */
+.services-pinned .services-right {
+  justify-content: center;
+  gap: clamp(26px, 4vh, 56px);
+}
+.services-left {
+  display: flex; flex-direction: column; align-items: flex-start;
+  position: relative; min-width: 0;
+}
+.services-left .services-eyebrow { margin-bottom: 1.7em; opacity: 1; }
+.services-left h2 {
+  font-family: var(--display); font-weight: 500;
+  font-size: var(--h2); line-height: 1.12; letter-spacing: -0.02em;
+  margin-bottom: 0;
+}
+.services-left h2 em { color: var(--icy); font-style: italic; white-space: nowrap; }
+.services-explore {
+  font-size: 1.05em; padding: 0.85em 1.6em; align-self: flex-start;
+}
+/* Compass rose fills the lower-left negative space under the header. It is
+   anchored to the TOP-RIGHT of its box with EQUAL top & right margins, and sized
+   as a big square that bleeds off the screen's left edge and the section's bottom
+   edge (the pinned section's overflow:hidden crops those two). Because the anchor
+   is top-right, the top and right margins stay constant and identical at every
+   viewport size — it can never crop on the top or right, only on the intended
+   left/bottom. */
+.compass-wrap {
+  flex: 1 1 auto; min-height: 90px; align-self: stretch;
+  position: relative; margin-top: 40px;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+.services-compass {
+  position: absolute;
+  top: 18px; right: 18px;             /* equal, constant margins on top & right */
+  left: auto; bottom: auto;
+  /* square (the art is 1:1) sized to overshoot the box so it always bleeds off
+     the screen-left and section-bottom; max() keeps it large on both wide and
+     short viewports. */
+  width: min(760px, max(52vw, 68vh));
+  height: auto; aspect-ratio: 1 / 1;
+  max-width: none;
+  object-fit: contain; object-position: center;
+  opacity: 0.52;
+  user-select: none;
+}
+/* heading + eyebrow always paint above the compass */
+.services-left .services-eyebrow, .services-left h2 { position: relative; z-index: 1; }
+
+.services-right {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 1.6em; min-width: 0;
+}
+.svc-row { display: flex; flex-direction: column; gap: 1em; }
+.svc-row-top {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 1.2em;
+}
+.svc-row-top h3 {
+  font-family: var(--display); font-weight: 500;
+  font-size: 2.55em; line-height: 1.06; letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.svc-row-top h3 em { font-style: italic; color: var(--icy); }
+.svc-row-top .icon-wrap {
+  width: auto; height: auto; border: 0; background: none; border-radius: 0;
+  flex: none; display: flex; align-items: center; justify-content: center;
+  margin-top: 0.15em;
+}
+.svc-row-top .icon-wrap svg { width: 2.5em; height: 2.5em; }
+.svc-row p {
+  color: #cfcfcf; font-size: 1em; line-height: 1.5; max-width: 62ch;
+}
+.svc-tags { display: flex; flex-wrap: wrap; gap: 0.55em; }
+.svc-tags .chip {
+  padding: 0.42em 0.95em; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 0.82em; color: #cfcfcf; white-space: nowrap;
+}
+.svc-div { height: 1px; background: var(--border); width: 100%; }
+
+/* ---------- portfolio cover-scroll ----------
+   The services panel is sticky (pinned for one viewport-height) while the
+   portfolio — now a natural-height section, free to grow taller than the
+   viewport — scrolls up over it in normal flow. No JS translate, no hold:
+   the cover moves 1:1 with the scroll, and once docked the page simply keeps
+   scrolling through the rest of the portfolio. */
+.cover-scroll {
+  position: relative;
+  z-index: 4;            /* sits above the film, so services covers the video */
+  margin-top: 0;         /* Services meets the video's rounded bottom flush — only the rounded corners reveal the black behind */
+}
+/* Icy underlay just past the cover-scroll's bottom edge, so the testimonials'
+   rounded top corners reveal the portfolio's blue (not the page's black) where
+   the curve cuts the black away. Sits below testimonials (z:20), above page bg. */
+.cover-scroll::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -80px;
+  height: 80px;
+  background: var(--icy);
+  z-index: 0;
+  pointer-events: none;
+}
+.nav-marker { position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; opacity: 0; }
+.cover-viewport {
+  position: relative;
+}
+.services-pinned {
+  position: sticky; top: 0;
+  overflow: hidden;
+  /* NATURAL height, modelled on the About→film parallax (which works at any zoom):
+     the section is only as tall as its content + regular vpad padding, pins
+     (sticky) while the portfolio rides up over it. No forced 100vh — so on
+     zoom-out the content isn't isolated in the middle of a huge black column, and
+     the cover-scroll keeps working however far the browser is zoomed out. The fit
+     script shrinks the content so the whole section never exceeds one viewport,
+     keeping the pin + cover clean on short / zoomed-in viewports. */
+  background: var(--bg);
+  z-index: 1;
+}
+/* The pinned services fill the 100vh viewport: header sits just under the nav,
+   the card grid grows to fill the rest, so the cards bottom out exactly 48px
+   above the fold — matching the 48px left/right gutter (Issue 1). */
+.services-pinned .services-section {
+  width: 100%;
+  /* Symmetric vpad: the label sits var(--vpad) below the section top (matching
+     every other section) and the same gap follows below the content. */
+  padding: var(--vpad) var(--gutter);
+  border-radius: 0;
+  display: block;   /* natural height — content is NOT stretched/centred in a 100vh box */
+}
+.services-pinned .services-inner { position: relative; z-index: 1; }
+/* Cards are sized to their CONTENT (equal height via grid stretch) and the whole
+   block is centred. The fit script only ever shrinks the shared font to keep the
+   block inside the pinned area on short/zoomed-in viewports — it never scales UP,
+   so the card text always stays in proportion with the section header and the
+   rest of the page (which scale uniformly with browser zoom). */
+.services-pinned .services-grid {
+  min-height: 0; align-items: stretch; flex: 0 0 auto;
+}
+.services-pinned .service-card { justify-content: center; min-height: 0; }
+.services-pinned .service-list { margin-top: 0; }
+/* portfolio rides over the pinned services in normal flow (z above), at its
+   natural height — taller than the viewport now that the case images grew. */
+.portfolio-overlay {
+  position: relative;
+  z-index: 10;
+  background: var(--icy);
+  color: #000000;
+  border-radius: 32px 32px 0 0;
+  padding: 56px 48px 40px;
+  display: flex; flex-direction: column;
+}
+.portfolio-overlay .portfolio-inner {
+  max-width: var(--content-max); width: 100%; margin: 0 auto;
+  display: flex; flex-direction: column;
+  flex: 1; min-height: 0;
+}
+.portfolio-head {
+  display: flex; justify-content: space-between;
+  align-items: end; margin-bottom: 36px; gap: 32px;
+}
+.portfolio-head h2 {
+  flex: 1 1 auto; min-width: 0;
+  font-family: var(--display); font-weight: 500;
+  font-size: var(--h2);
+  line-height: 1.12; letter-spacing: -0.02em;
+}
+.portfolio-head h2 em { font-style: italic; color: var(--periwinkle); }
+.portfolio-overlay .eyebrow { color: #1a1a1a; opacity: 0.7; }
+.portfolio-controls { display: flex; gap: 10px; align-items: center; }
+.arrow-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid currentColor; opacity: 0.7;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.3s, color 0.3s, opacity 0.3s, border-color 0.3s;
+}
+.arrow-btn:hover { background: #000000; color: var(--icy); border-color: #000000; opacity: 1; }
+.arrow-btn svg { width: 18px; height: 18px; }
+.portfolio-overlay .arrow-btn { color: #000000; border-color: rgba(0,0,0,0.4); }
+
+.portfolio-track { flex: 1; position: relative; overflow: visible; min-height: 0; display: flex; align-items: stretch; }
+.portfolio-rail {
+  display: flex; gap: 28px; width: 100%; align-items: center;
+  transition: transform 0.7s cubic-bezier(.22,.8,.36,1);
+  will-change: transform;
+}
+.case {
+  /* two full cards + a ~20% sliver of the third fit the rail width */
+  flex: 0 0 calc((100% - 56px) / 2.2);
+  background: #000000; color: var(--icy);
+  border-radius: 22px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.case-art {
+  position: relative; overflow: hidden; background: #0a0a0a;
+  /* matches the thumbnail / loop aspect (16:9) so the media fills the container
+     edge-to-edge with no side margins. */
+  flex: 0 0 auto;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 0;
+}
+/* Image fills the top of the card (cover); the meta sits below it. */
+.case-art .placeholder,
+.case-art .case-img {
+  position: absolute; inset: -1px;
+  width: calc(100% + 2px); height: calc(100% + 2px);
+  object-fit: cover; display: block;
+}
+/* UNbound case: static thumbnail at rest; hovering anywhere on the card fades it
+   out and the loop video plays from 0:00. Both layers fill the same box, so the
+   container never changes size. */
+.case-thumb {
+  position: absolute; inset: -1px;
+  width: calc(100% + 2px); height: calc(100% + 2px);
+  object-fit: cover; display: block;
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+.case--hoverplay.is-playing .case-thumb { opacity: 0; }
+/* embedded standalone loop — the animation and the card box are both 16:9, so
+   the iframe simply fills the box: the loop sits edge-to-edge, no side margins. */
+.case-embed {
+  position: absolute; inset: -1px;
+  width: calc(100% + 2px); height: calc(100% + 2px);
+  border: 0; display: block; background: transparent;
+  pointer-events: none;
+  z-index: 0;
+  /* The loop is invisible until the card is hovered (and playing), so it never
+     shows through at the thumbnail's edges. */
+  opacity: 0; transition: opacity 0.35s ease;
+}
+.case--hoverplay.is-playing .case-embed { opacity: 1; }
+.case-badge {
+  position: absolute; top: 18px; left: 18px; z-index: 2;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: #000000; color: var(--icy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-style: italic; font-size: 19px;
+}
+.case-meta {
+  flex: 0 0 auto;
+  padding: clamp(20px, 1.7vw, 30px) clamp(22px, 1.9vw, 34px) clamp(24px, 2.1vw, 34px);
+  display: flex; flex-direction: column; gap: 11px;
+  background: #000000;
+}
+.case-tag {
+  font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--periwinkle); font-weight: 600;
+}
+.case h3 {
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(26px, 2.1vw, 40px); line-height: 1.0; letter-spacing: -0.01em;
+  color: var(--icy);
+}
+.case h3 em { font-style: italic; color: var(--periwinkle); }
+.case-desc { color: #b8b8b8; font-size: clamp(14px, 1vw, 17px); line-height: 1.5; max-width: 42ch; }
+.case-services { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.case-services .chip {
+  padding: 6px 13px; border: 1px solid var(--border);
+  border-radius: 999px; font-size: 12.5px; color: #cfcfcf;
+  background: var(--surface);   /* match the Services section pills */
+}
+.portfolio-foot {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-top: 48px;
+}
+.portfolio-counter { font-family: var(--display); font-style: italic; font-size: 22px; color: rgba(0,0,0,0.6); }
+.portfolio-counter .now { color: #000000; font-style: normal; }
+
+/* 'See all work' matches the About 'Start your project' CTA: periwinkle, white on hover.
+   margin-left:auto keeps it pinned to the right of the foot whether or not the
+   carousel arrows have been relocated to the foot's left at narrow widths. */
+.see-all-cta { background: var(--periwinkle); color: #000000; margin-left: auto; }
+.see-all-cta:hover { background: #ffffff; color: #000000; }
+
+/* Within the pinned cover-scroll, compact the portfolio header + footer so the
+   doubled-height image cards get the vertical room they need without clipping. */
+.cover-viewport .portfolio-overlay { padding: var(--vpad) var(--gutter); }
+/* Portfolio header matches the Testimonials header — same type scale and the
+   same fluid gap down to the cards container. */
+.cover-viewport .portfolio-head { margin-bottom: var(--head-gap); }
+.cover-viewport .portfolio-head h2 { font-size: var(--h2); }
+/* Carousel container→controls gap, kept equal to the Testimonials below-row. */
+.cover-viewport .portfolio-foot { margin-top: var(--ctrl-gap); }
+
+/* ---------- testimonials ---------- */
+.testimonials {
+  background: var(--bg);
+  padding: var(--vpad) var(--gutter);
+  position: relative; z-index: 20;
+  border-radius: 44px 44px 0 0;
+  margin-top: -1px;
+}
+.testimonials-inner { max-width: var(--content-max); margin: 0 auto; }
+.t-head {
+  display: flex; justify-content: space-between;
+  align-items: end; margin-bottom: var(--head-gap); gap: 32px;
+}
+.t-head h2 {
+  flex: 1 1 auto; min-width: 0;
+  font-family: var(--display); font-weight: 500;
+  font-size: var(--h2);
+  line-height: 1.12; letter-spacing: -0.02em;
+}
+.t-head h2 em { color: var(--icy); font-style: italic; }
+.testimonials .arrow-btn { color: var(--text); border-color: var(--border); opacity: 1; }
+.testimonials .arrow-btn:hover { background: var(--periwinkle); color: #000000; border-color: var(--periwinkle); }
+.t-track-wrap { overflow: hidden; }
+.t-track { display: flex; gap: 24px; transition: transform 0.7s cubic-bezier(.22,.8,.36,1); will-change: transform; }
+.t-card {
+  flex: 0 0 calc((100% - 48px) / 3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 36px;
+  display: flex; flex-direction: column; gap: 28px;
+  min-height: 320px;
+}
+.t-card.peri { background: var(--periwinkle); color: #000000; border-color: var(--periwinkle); }
+.t-card.peri .t-quote em { color: #ffffff; }
+.t-card.peri .t-cite { border-top-color: rgba(0,0,0,0.2); }
+.t-card.peri .t-cite .biz { color: rgba(0,0,0,0.7); }
+.t-card.icy { background: var(--icy); color: #000000; border-color: var(--icy); }
+.t-card.icy .t-quote em { color: var(--periwinkle); }
+.t-card.icy .t-cite { border-top-color: rgba(0,0,0,0.2); }
+.t-card.icy .t-cite .biz { color: rgba(0,0,0,0.7); }
+.t-quote { font-family: var(--display); font-weight: 500; font-size: clamp(26px, 2.3vw, 34px); line-height: 1.25; letter-spacing: -0.01em; flex: 1; }
+.t-quote em { font-style: italic; color: var(--icy); }
+.t-cite { display: flex; flex-direction: row; align-items: center; gap: 13px; font-size: 14px; border-top: 1px solid var(--border); padding-top: 20px; }
+.t-avatar {
+  flex: none; width: 42px; height: 42px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-style: italic; font-weight: 600;
+  font-size: 16px; letter-spacing: 0.01em;
+  background: rgba(0,0,0,0.07); border: 1px solid rgba(0,0,0,0.18);
+  color: #000000;
+  overflow: hidden;
+}
+/* photo avatar fills the circle edge-to-edge */
+.t-avatar-img { background: none; border-color: rgba(0,0,0,0.18); }
+.t-avatar-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; border-radius: 50%; display: block; }
+.t-cite-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.t-card.peri .t-avatar { background: rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.28); }
+.t-cite .name { }
+.t-cite .biz { color: var(--muted); }
+
+/* ---------- contact ---------- */
+.contact {
+  position: relative;
+  padding: var(--vpad) 0 clamp(40px, 4vw, 55px);
+  overflow: hidden;
+}
+.contact-glow {
+  position: absolute; left: 50%; top: 30%;
+  width: 1300px; height: 1000px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(138, 132, 226, 0.22), rgba(138, 132, 226, 0) 70%);
+  filter: blur(30px); pointer-events: none; z-index: 0;
+}
+.contact-inner { position: relative; z-index: 1; }
+.contact-form-wrap { max-width: 1400px; margin: 0 auto; padding: 0 48px; }
+
+/* "vision" container — full-bleed by default (mobile + the resting state), and on
+   desktop it expands on scroll from a 96px inset (rounded) to edge-to-edge
+   (square). The inset is driven by a CSS var so the margin-breakout that escapes
+   the parent padding keeps working at every width. */
+.vision-box {
+  --inset: 0px;
+  background: var(--periwinkle);
+  color: #000000;
+  border-radius: var(--vision-radius, 0px);
+  /* deep bottom padding makes room for the contact card that overlaps this box;
+     top padding matches every other section's label→top gap (var(--vpad)) so the
+     eyebrow sits the same distance below the purple box top as the other section
+     labels do — responsive at every width. */
+  padding: var(--vpad) clamp(24px, 5vw, 96px) 260px;
+  position: relative;
+  overflow: hidden;
+  width: calc(100vw - var(--inset) * 2);
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw + var(--inset));
+  margin-right: calc(50% - 50vw + var(--inset));
+  box-sizing: border-box;
+}
+.vision-stars { position: absolute; inset: 0; pointer-events: none; opacity: 0.5; }
+.vision-inner {
+  position: relative; z-index: 1; max-width: 1400px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr;
+  gap: 56px; align-items: center;
+}
+.vision-text { min-width: 0; }
+/* Puzzle illustration sits in natural flow at a generous size; the headline
+   beside it auto-fits, so the two never collide. */
+.vision-illo {
+  position: relative; min-width: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.vision-illo img {
+  position: static;
+  width: 100%; height: auto;
+  max-width: 500px;
+}
+.vision-eyebrow { color: #000000; opacity: 0.7; margin-bottom: 22px; }
+/* Fit-to-width headings: each line stays on a single line (never reflows word
+   by word); a small script scales the whole heading down only when a line would
+   otherwise overflow its container. */
+.fit-head .fit-line { display: block; white-space: nowrap; }
+
+.contact h2 {
+  font-family: var(--display); font-weight: 500;
+  font-size: var(--h2);
+  line-height: 1.12; letter-spacing: -0.02em;
+}
+.contact h2 .rui-accent {
+  font-family: var(--accent);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.78em;
+}
+.contact h2 .focus-word {
+  display: inline-block;
+  font-family: var(--accent);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.78em;
+}
+/* Keep "Let's bring it into focus." as one unbroken unit, so when the headline
+   wraps it lands whole on the second line (the fit-head script scales it down if
+   it would overflow). */
+.fit-head .cohere { white-space: nowrap; }
+/* each line tilts to italic on hover; nowrap means it can't reflow as it does */
+.contact h2 .fit-line { transition: none; }
+@media (hover: hover) and (pointer: fine) {
+  .contact h2 .fit-line:hover,
+  .contact h2 .fit-line:hover .rui-accent,
+  .contact h2 .fit-line:hover .focus-word { font-style: italic; }
+}
+.contact-sub { margin-top: 24px; font-size: clamp(14px, 1.2vw, 18px); line-height: 1.7; max-width: 560px; color: #1a1a1a; }
+/* wide variant: wraps only at the container edge (the screen's other margin) */
+.contact-sub-wide { max-width: none; }
+
+.form {
+  margin-top: 60px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px 32px;
+}
+.form-fields-wrap {
+  background: #000000; color: var(--text);
+  border-radius: 24px; padding: 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px 32px;
+  margin: 60px auto 0;
+  width: min(1304px, calc(100% - 96px));
+}
+.field { display: flex; flex-direction: column; gap: 10px; }
+.field.full { grid-column: 1 / -1; }
+.field label {
+  font-size: 12px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+}
+.field label .opt { color: #555; margin-left: 6px; }
+.field input,
+.field textarea {
+  background: transparent; border: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0; color: var(--text);
+  font-family: var(--body); font-size: 17px;
+  outline: none; transition: border-color 0.3s ease;
+}
+.field textarea { min-height: 120px; resize: vertical; font-family: var(--body); }
+.field input:focus, .field textarea:focus { border-bottom-color: var(--periwinkle); }
+.field input::placeholder, .field textarea::placeholder { color: #555; }
+.form-foot { grid-column: 1 / -1; margin-top: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 16px; }
+
+/* contact form delivery status */
+.form-status { margin: 0; font-family: var(--body); font-size: 15px; line-height: 1.5; max-width: 46ch; white-space: pre-line; }
+.form-status:empty { display: none; }
+.form-status.is-success { color: var(--icy); }
+.form-status.is-error { color: #E89B9B; }
+
+/* contact card — black, icy-blue border, straddles the periwinkle box above and
+   the black section background below. Fields + CTA on the left, puzzle on the right. */
+.contact-card {
+  position: relative; z-index: 2;
+  background: #000000; color: var(--text);
+  border: 1.5px solid var(--periwinkle);
+  border-radius: 28px;
+  width: min(1400px, calc(100% - 96px));
+  margin: -210px auto 0;
+  padding: clamp(28px, 3.4vw, 54px);
+  display: grid; grid-template-columns: 1.55fr 1fr;
+  gap: clamp(32px, 4vw, 64px);
+  align-items: center;
+}
+.contact-card-fields {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px 32px;
+  min-width: 0;
+}
+.contact-card-illo {
+  min-width: 0; align-self: center;
+  display: flex; align-items: center; justify-content: center;
+}
+.contact-card-illo img { width: 100%; height: auto; max-width: 420px; }
+/* 'Send it' CTA left-aligned inside the contact card */
+.contact-card .form-foot { align-items: flex-start; }
+
+/* ---------- footer ---------- */
+.foot {
+  border-top: 1px solid var(--periwinkle);
+  padding: 36px 48px 28px;
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 24px;
+  color: var(--muted); font-size: 13px;
+}
+.foot-logo img { height: 26px; width: auto; display: block; }
+.foot-nav { display: flex; gap: 24px; }
+.foot-nav a { color: #cfcfcf; transition: color 0.3s; }
+.foot-nav a:hover { color: var(--periwinkle); }
+.foot-social { display: flex; gap: 14px; justify-content: flex-end; }
+.foot-social a {
+  font-size: 13px; color: #cfcfcf;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 3px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.foot-social a:hover { color: var(--periwinkle); border-color: var(--periwinkle); }
+.foot-bottom {
+  grid-column: 1 / -1; border-top: 1px solid var(--border);
+  margin-top: 28px; padding-top: 20px;
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--muted); letter-spacing: 0.04em;
+}
+
+/* ---------- narrow hero: marquee peeks up, type shrinks, nebula goes portrait ----------
+   At this point the hero text is small enough that the marquee comes into view, so
+   the hero reads as a tall/narrow frame. Rotate the nebula to portrait to suit it,
+   let the headline wrap (instead of forcing the fit script to shrink it), and tuck
+   the vertical padding in a little. */
+@media (max-width: 760px) {
+  .hero { --hero-gap: clamp(60px, 8vh, 96px); }
+  .hero-headline .line { white-space: normal; }
+  /* Centre the hero label (spark + "Lucid Studio…") once it wraps on mobile.
+     The spark is a left-pinned flex item, so it must flow inline for the whole
+     label to centre — text-align alone only centres the text beside the icon. */
+  .hero-eyebrow .eyebrow-row { display: inline; text-align: center; }
+  .hero-eyebrow .eyebrow-spark { display: inline-block; vertical-align: -2px; margin: 0 8px 0 0; }
+  /* hero nebula now uses a real <img class="hero-bg-img"> with object-fit:cover,
+     which fills the hero at every width / orientation / zoom — no per-breakpoint
+     background overrides are needed. */
+}
+
+/* ---------- cursor ---------- */
+.cursor-ring, .cursor-dot {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+.cursor-ring {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--text);
+  transition: width 0.4s cubic-bezier(.22,.8,.36,1),
+              height 0.4s cubic-bezier(.22,.8,.36,1),
+              background 0.4s cubic-bezier(.22,.8,.36,1),
+              border-color 0.4s cubic-bezier(.22,.8,.36,1),
+              opacity 0.3s ease;
+}
+.cursor-dot {
+  width: 14px; height: 14px;
+  background-image: url("assets/mark-white.png");
+  background-size: contain; background-repeat: no-repeat; background-position: center;
+  transition: opacity 0.3s ease, filter 0.4s ease;
+}
+body.cursor-cta .cursor-ring {
+  width: 110px; height: 110px;
+  background: rgba(138, 132, 226, 0.22); border-color: rgba(138, 132, 226, 0);
+}
+body.cursor-cta .cursor-dot { opacity: 0; }
+body.cursor-on-light .cursor-ring { border-color: #000000; }
+body.cursor-on-light .cursor-dot { filter: invert(1); }
+body.cursor-on-peri .cursor-ring { border-color: var(--icy); }
+body.cursor-on-peri .cursor-dot { filter: hue-rotate(190deg) brightness(1.2); }
+
+/* ---------- short viewports / browser zoom-in ----------
+   The services + portfolio share one pinned 100vh viewport that clips overflow.
+   When the viewport gets short (the user zooms the browser in, which shrinks the
+   CSS-pixel viewport height), the rich card content would overflow and get cut
+   off. These max-height tiers shrink paddings, type and card heights so the
+   pinned content keeps fitting. Top padding stays clear of the ~107px fixed nav. */
+/* Min-content guards so flex children can't force overflow; no padding/margin
+   jumps in the normal desktop range (≥700px tall) — that keeps the gutters
+   stable through ordinary zooming. Only on genuinely short viewports do we tuck
+   the margins in (a single tier) so the pinned content still fits. */
+@media (min-width: 901px) {
+  .services-pinned .service-card { min-height: 0; }
+  .portfolio-overlay .case { min-height: 0; }
+  /* Cards share an equal height (flex stretch); the image area is a fixed
+     1.5×-scaled height and the section grows to fit it. */
+  .cover-viewport .portfolio-rail { align-items: stretch; }
+}
+@media (min-width: 901px) and (max-height: 700px) {
+  .services-pinned .services-section { padding: 100px var(--gutter) 28px; }
+  .cover-viewport .portfolio-overlay { padding: 100px var(--gutter) 24px; }
+  .cover-viewport .portfolio-head { margin-bottom: 40px; }
+  .cover-viewport .portfolio-foot { margin-top: 30px; }
+  .case-meta { padding: 20px 22px; }
+}
+
+/* ---------- responsive ---------- */
+/* Compress the nav before it ever needs to wrap, so links never crowd the logo
+   or CTA as the viewport narrows (or the user zooms in). */
+@media (max-width: 1150px) {
+  .nav { padding: 22px 32px; }
+  .nav-links { gap: 26px; font-size: 16px; }
+  .nav-cta { font-size: 16px; padding: 8px 18px; }
+  .nav-logo img { height: 38px !important; width: auto !important; }
+}
+/* Stack the vision box before the two-line headline runs out of room beside the
+   puzzle, and return the (normally height-contained) illustration to natural flow. */
+@media (max-width: 1040px) {
+  .vision-inner { grid-template-columns: 1fr; gap: 36px; }
+  .vision-illo { position: static; align-self: auto; min-height: 0; }
+  .vision-illo img { position: static; width: 100%; height: auto; max-width: 460px; margin: 0 auto; }
+  .contact-card { grid-template-columns: 1fr; }
+  .contact-card-illo img { max-width: 380px; margin: 0 auto; }
+}
+@media (max-width: 900px) {
+  .nav {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  .nav-toggle { display: inline-flex; }
+  .nav-links {
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; justify-content: flex-start;
+    gap: 0; background: #000000;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0 20px; max-height: 0; overflow: hidden;
+    font-size: 18px;
+    transition: max-height 0.42s cubic-bezier(.22,.8,.36,1), padding 0.42s ease;
+  }
+  .nav.open .nav-links { max-height: 84vh; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 6px 20px 16px; }
+  .nav-links a { padding: 13px 4px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .nav-links a:last-child { border-bottom: none; }
+  .about, .testimonials, .contact, .services-section, .band, .portfolio-overlay { padding-left: 24px; padding-right: 24px; }
+  .about-body { grid-template-columns: 1fr; gap: 28px; }
+  .about-grid { grid-template-columns: 1fr; gap: 36px; }
+  .about-illo { display: none; }   /* hide the illustration on small screens instead of stacking it */
+  .about { min-height: 0; height: auto; display: block; position: static; }
+  .compass-wrap { display: none; }   /* hide the Compass Rose on small screens */
+  .vision-inner { grid-template-columns: 1fr; gap: 32px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .services-head { grid-template-columns: 1fr; }
+  .services-redux { grid-template-columns: 1fr; gap: 44px; font-size: 16px; align-items: start; }
+  .services-chevrons { display: none; }
+  .case { flex: 0 0 88%; }
+  .t-card { flex: 0 0 100%; }
+  /* Services single column: the subheaders were competing with (even exceeding)
+     the main "Three crafts." header. Pin them to an absolute scale clearly below
+     the h2 — mirroring the Portfolio's header→card-title hierarchy. */
+  .services-pinned .services-redux .svc-row-top h3 { font-size: clamp(24px, 4vw, 33px); }
+  .form-fields-wrap { grid-template-columns: 1fr; padding: 28px; }
+  .contact-card-fields { grid-template-columns: 1fr; }
+  .contact-card { width: 92%; margin-top: -150px; padding: 28px; }
+  .band-inner { grid-template-columns: 1fr; }
+  .vision-box { padding: 48px 20px 190px; }
+  .about-cover { height: auto; }
+  .about { padding: var(--vpad) 24px 44px; }
+  .into-focus { border-radius: 24px; }
+  .cover-scroll { margin-top: 0; }
+  .cover-viewport { position: static; }
+  .services-pinned { position: relative; inset: auto; height: auto; }
+  .services-pinned .services-section { display: block; padding: 56px 24px; }
+  .services-pinned .services-inner { display: block; }
+  /* Single column so each service drops to its own full-width row beneath the
+     header once the Compass Rose is removed (must restate the columns — the
+     2-column desktop rule has equal specificity and would otherwise win). */
+  .services-pinned .services-inner.services-redux { display: grid; grid-template-columns: 1fr; }
+  .services-pinned .services-grid { grid-template-rows: none; flex: none; }
+  .portfolio-overlay { position: relative; inset: auto; transform: none !important; padding: var(--vpad) 24px; border-radius: 32px 32px 0 0; }
+  .portfolio-track { min-height: 0; overflow: visible; }
+  .portfolio-rail { height: auto; align-items: stretch; }
+  .case-art { aspect-ratio: 16 / 9; height: auto; min-height: 0; flex: none; }
+  .case-meta { overflow: visible; }
+  .about, .testimonials, .contact { scroll-margin-top: 64px; }
+  /* When the Contact expand-on-arrival effect drops, the periwinkle box assumes
+     curved top edges (matching the Portfolio panel) instead of a hard square. */
+  .vision-box { border-radius: 28px 28px 0 0; }
+}
+
+/* ---------- responsive refinements: stepped carousels + compass bleed ----------
+   Desktop (full width, ≥1301px) is intentionally left untouched — these tiers
+   only engage as the browser shrinks below the full-desktop size. */
+/* Testimonials reduce 3 → 2 → 1 card as the viewport narrows (mobile = 1 card). */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .t-card { flex: 0 0 calc((100% - 24px) / 2); }
+}
+/* Portfolio eases from 2.2 → ~1.7 cards before the single-card mobile view. */
+@media (min-width: 901px) and (max-width: 1120px) {
+  .case { flex: 0 0 calc((100% - 28px) / 1.7); }
+}
+/* Compass rose: across the shrunk (non-full-desktop) range, enlarge + re-anchor
+   so the art always bleeds past the screen's left & bottom edges — the only crop
+   is intentional overshoot, never a black gap between it and the screen edge. */
+@media (min-width: 901px) and (max-width: 1300px) {
+  .services-compass {
+    top: 14px; right: 14px;
+    width: min(760px, max(74vw, 90vh));
+    opacity: 0.45;
+  }
+}
+/* Below full-desktop, let the fit-to-width headings WRAP at the shared heading
+   clamp instead of scaling themselves down to one line. This keeps every section
+   header the same size at the same width (they were diverging because only the
+   one-line headers shrank). Full desktop (≥1301px) keeps the one-line design. */
+@media (max-width: 1300px) {
+  .fit-head .fit-line { white-space: normal; }
+}
+
+/* ---------- mobile/responsive additions (this round) ---------- */
+/* Hero shrinks to fit its content instead of being locked to a full 100vh, so it
+   is not excessively tall on small screens — the marquee rises into view and
+   reveals the next section. Engages at the same width the nav collapses to the
+   hamburger (900px). */
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    --hero-gap: clamp(34px, 6vh, 70px);
+    padding-top: calc(76px + var(--hero-gap));
+    padding-bottom: var(--hero-gap);
+  }
+}
+
+/* Carousel arrows relocate (moved in the DOM by reveals.js) once the viewport
+   narrows past 1100px: Portfolio arrows drop into the foot's bottom-left, level
+   with 'See all work'; Testimonials arrows drop below the cards. This hands the
+   heading the full page width. */
+@media (max-width: 1100px) {
+  .portfolio-controls { margin-left: 0; }
+}
+.t-controls-below { display: flex; gap: 10px; margin-top: var(--ctrl-gap); }
+.t-controls-below:empty { display: none; }
+
+/* Footer: the 3-column row can't hold the nav + long email as the viewport
+   narrows, so stack it into a single left-aligned column and let the nav wrap. */
+@media (max-width: 960px) {
+  .foot {
+    grid-template-columns: 1fr;
+    justify-items: start; gap: 22px;
+    padding: 36px 24px 28px;
+  }
+  .foot-nav { flex-wrap: wrap; gap: 12px 22px; }
+  .foot-social { justify-content: flex-start; }
+  .foot-social a { overflow-wrap: anywhere; }
+  .foot-bottom { flex-direction: column; gap: 10px; align-items: flex-start; }
+}
+
+/* Contact: hide the puzzle illustration once the card collapses to one column. */
+@media (max-width: 1040px) {
+  .contact-card-illo { display: none; }
+}
+
+/* Very narrow / heavy zoom-in: shrink the nav chrome so the Contact button and
+   hamburger always fit — the three bars were getting cropped at the right edge. */
+@media (max-width: 600px) {
+  .nav { padding: 12px 14px; gap: 10px; }
+  .nav-right { gap: 14px; }
+  .nav-logo img { height: 28px !important; }
+  .nav-cta { font-size: 14px; padding: 7px 13px; gap: 6px; }
+  .nav-toggle { width: 40px; height: 40px; }
+}
+
+/* The periwinkle contact container is full-bleed at every width (handled by the
+   base .vision-box rule), so no per-breakpoint width override is needed. */
+
+/* About header: normally two lines ("…can change" / "everything…"). A script adds
+   .flow when the first line would wrap (orphaning "change"), at which point the
+   forced break is dropped and the words flow naturally. */
+.about-quote.flow .aq-line { display: inline; }
+
+/* ---------- Works page (standalone portfolio) ---------- */
+.works-page { background: var(--bg); color: var(--text); padding-top: 108px; }
+/* Icy header band — everything above the 'Explore all' filter row, with curved
+   top corners that reveal the black page behind (a docked-panel look). */
+.works-top { background: var(--icy); color: #000000; border-radius: 34px 34px 0 0; }
+.works-hero {
+  position: relative;
+  padding: var(--vpad) var(--gutter);
+  max-width: var(--content-max); margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: minmax(0, 1fr) clamp(320px, 38vw, 560px);
+  gap: clamp(36px, 5vw, 84px); align-items: center;
+}
+.works-hero-text { min-width: 0; }
+.works-top .eyebrow { color: #1a1a1a; opacity: 0.72; margin-bottom: 26px; }
+.works-top .eyebrow-spark { color: var(--periwinkle); opacity: 1; }
+.works-title {
+  font-family: var(--accent); font-weight: 400;
+  font-size: clamp(58px, 7.4vw, 124px); line-height: 0.96; letter-spacing: 0.01em;
+  margin-bottom: 26px; color: var(--periwinkle);
+}
+/* Spanish "Portafolio" is a character wider than "Portfolio" and, at the size
+   cap, overran its grid column into the film. Trim it down just in Spanish so it
+   stays clear of the video while English keeps its full scale. */
+body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
+.works-lead { font-size: clamp(17px, 1.5vw, 22px); line-height: 1.55; color: #1a1a1a; max-width: 540px; }
+/* Into-focus film chip beside the title */
+.works-filmchip {
+  position: relative; aspect-ratio: 16 / 9; width: 100%;
+  border-radius: 24px; overflow: hidden; background: #0a0e1c;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+}
+.works-filmchip iframe {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; height: calc(100% + 48px); border: 0; display: block; pointer-events: none;
+}
+.works-filter-wrap { border-top: 1px solid var(--border); }
+/* mp4 hover-play media fills the card art box (CarWash MX, Flor Tierra, Abimerhi) */
+.case-art .case-vid {
+  position: absolute; inset: -1px;
+  width: calc(100% + 2px); height: calc(100% + 2px);
+  object-fit: cover; display: block;
+}
+/* compact 'Visit site' link on selected project cards */
+.case-visit {
+  align-self: flex-start; margin-top: 6px;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 15px; border-radius: 999px;
+  border: 1px solid var(--periwinkle); color: var(--icy);
+  font-size: 13px; font-weight: 500;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.case-visit:hover { background: var(--periwinkle); color: #000000; }
+.case-visit .arrow { display: inline-block; transform: rotate(45deg); transition: transform 0.4s cubic-bezier(.22,.8,.36,1); }
+.case-visit:hover .arrow { transform: rotate(0deg); }
+@media (max-width: 900px) {
+  .works-page { padding-top: 72px; }
+  .works-top { border-radius: 24px 24px 0 0; }
+}
+
+.works-filter-wrap {
+  max-width: var(--content-max); margin: 0 auto; width: 100%;
+  padding: clamp(38px, 4vw, 60px) var(--gutter) clamp(28px, 3vw, 40px);
+}
+.works-filter { display: flex; flex-wrap: wrap; gap: clamp(22px, 3vw, 54px); align-items: baseline; }
+.works-filter button {
+  font-family: var(--display); font-weight: 500;
+  font-size: clamp(24px, 2.5vw, 38px); line-height: 1; letter-spacing: -0.01em;
+  color: #5a5a5a; display: inline-flex; align-items: flex-start; gap: 6px;
+  transition: color 0.35s ease;
+}
+.works-filter button .count {
+  font-family: var(--body); font-size: 0.4em; font-weight: 600;
+  color: var(--periwinkle); transform: translateY(-0.1em);
+}
+.works-filter button:hover { color: #cfcfcf; }
+.works-filter button.is-active { color: var(--text); }
+.works-filter button.is-active .count { color: var(--maya); }
+
+.works-grid-wrap {
+  max-width: var(--content-max); margin: 0 auto; width: 100%;
+  padding: 0 var(--gutter) calc(var(--vpad) + 24px);
+}
+.works-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 2.4vw, 38px); }
+.works-grid .case {
+  flex: none;
+  transition: transform 0.55s cubic-bezier(.22,.8,.36,1), box-shadow 0.55s ease;
+}
+.works-grid .case-art { aspect-ratio: 16 / 9; }
+.works-grid .case .case-art img,
+.works-grid .case .case-art .placeholder { transition: transform 0.7s cubic-bezier(.22,.8,.36,1); }
+.works-grid .case h3 { font-size: clamp(28px, 2.5vw, 46px); }
+.works-grid .case.is-hidden { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .works-grid .case:hover { transform: translateY(-8px); box-shadow: 0 26px 66px rgba(0,0,0,0.55); }
+  .works-grid .case:hover .case-art img,
+  .works-grid .case:hover .case-art .placeholder { transform: scale(1.06); }
+  .works-grid .case--hoverplay:hover .case-embed { transform: none; }
+}
+/* Same hover-rise the Portfolio-tab cards have, applied to the homepage rail. */
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-rail .case {
+    transition: transform 0.55s cubic-bezier(.22,.8,.36,1), box-shadow 0.55s ease;
+  }
+  .portfolio-rail .case:hover {
+    transform: translateY(-8px);
+  }
+}
+@media (max-width: 860px) {
+  .works-grid { grid-template-columns: 1fr; }
+  .works-hero { grid-template-columns: 1fr; gap: 34px; padding-top: var(--vpad); }
+  .works-filmchip { max-width: 540px; }
+  .works-hero, .works-filter-wrap, .works-grid-wrap { padding-left: 24px; padding-right: 24px; }
+}
+
+/* ---------- Language toggle (EN ⇄ ES) ---------- */
+.lang-toggle {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: none; border: 0; padding: 0; margin: 0;
+  cursor: pointer; font-family: var(--body);
+  -webkit-tap-highlight-color: transparent;
+}
+.lang-toggle .lang-label {
+  font-size: 13px; font-weight: 600; letter-spacing: 0.05em;
+  color: #6a6a6a; transition: color 0.3s ease; user-select: none;
+}
+.lang-toggle .lang-en { color: var(--icy); }
+.lang-switch {
+  position: relative; width: 50px; height: 25px; flex: none;
+  border-radius: 999px; background: var(--surface);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.lang-knob {
+  position: absolute; top: 2px; left: 2px;
+  width: 19px; height: 19px; border-radius: 50%; overflow: hidden;
+  background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.55);
+  transition: transform 0.35s cubic-bezier(.22,.8,.36,1);
+}
+.lang-knob .flag {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.lang-knob .flag-uk { opacity: 1; }
+.lang-toggle:hover .lang-switch { border-color: var(--periwinkle); }
+
+/* ES state */
+body[data-lang="es"] .lang-en { color: #6a6a6a; }
+body[data-lang="es"] .lang-es { color: var(--periwinkle-l); }
+body[data-lang="es"] .lang-switch { background: var(--periwinkle-d); border-color: var(--periwinkle); }
+body[data-lang="es"] .lang-knob { transform: translateX(25px); }
+body[data-lang="es"] .lang-knob .flag-uk { opacity: 0; }
+body[data-lang="es"] .lang-knob .flag-es { opacity: 1; }
+
+@media (max-width: 600px) {
+  .lang-toggle .lang-label { font-size: 12px; }
+  .lang-switch { width: 44px; height: 23px; }
+  .lang-knob { width: 17px; height: 17px; }
+  body[data-lang="es"] .lang-knob { transform: translateX(21px); }
+}

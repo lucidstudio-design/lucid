@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lucid | Web design & branding</title>
+<link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)" />
+<link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css?v=34" />
+<link id="gfont-Playfair-Display" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&amp;display=swap">
+<!-- Resources referenced from JS (iframe HTML bundles) — lifted so the standalone bundler can inline them. -->
+<meta name="ext-resource-dependency" content="film/into-focus.html" data-resource-id="intoFocus" />
+<meta name="ext-resource-dependency" content="film/unbound-loop.html" data-resource-id="unboundLoop" />
+<meta name="ext-resource-dependency" content="film/carwash-mx.html" data-resource-id="carwashFilm" />
+<meta name="ext-resource-dependency" content="film/flor-tierra.html" data-resource-id="florFilm" />
+<meta name="ext-resource-dependency" content="film/abimerhi.html" data-resource-id="abimerhiFilm" />
+</head>
+<body>
+
+<script>
+  /* Scroll restoration. The browser's NATIVE restore landed on the wrong section
+     (Portfolio) because the pinned cover-scroll + lazy films settle their heights
+     only AFTER the restore fires. So we take over: remember the exact scroll
+     position and re-apply it once layout has settled — you reload exactly where
+     you were, it never snaps back to the hero and never jumps to Portfolio.
+     A #hash deep-link wins, and we stop the moment the user scrolls themselves. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  (function () {
+    var KEY = 'lucid-scrollY';
+    var saved = 0;
+    try { saved = parseInt(sessionStorage.getItem(KEY) || '0', 10) || 0; } catch (e) {}
+    var hasHash = location.hash && location.hash.length > 1;
+    var userMoved = false;
+    function stop() { userMoved = true; }
+    window.addEventListener('wheel', stop, { passive: true, once: true });
+    window.addEventListener('touchmove', stop, { passive: true, once: true });
+    window.addEventListener('keydown', function (e) {
+      if (['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].indexOf(e.key) > -1) userMoved = true;
+    });
+    function restore() {
+      if (userMoved || hasHash || saved <= 0) return;
+      window.scrollTo(0, saved);
+    }
+    window.addEventListener('DOMContentLoaded', restore);
+    window.addEventListener('load', function () { restore(); setTimeout(restore, 90); setTimeout(restore, 240); });
+    var pending = false;
+    window.addEventListener('scroll', function () {
+      if (pending) return;
+      pending = true;
+      setTimeout(function () {
+        pending = false;
+        try { sessionStorage.setItem(KEY, String(Math.round(window.scrollY || window.pageYOffset || 0))); } catch (e) {}
+      }, 150);
+    }, { passive: true });
+  })();
+</script>
+
+<template id="__bundler_thumbnail" data-bg-color="#000000">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#000000"/>
+    <g fill="none" stroke="#8A84E2" stroke-width="6">
+      <circle cx="600" cy="400" r="150"/>
+      <circle cx="600" cy="400" r="110"/>
+    </g>
+    <path d="M600 250 L628 372 L750 400 L628 428 L600 550 L572 428 L450 400 L572 372 Z" fill="#8A84E2"/>
+    <circle cx="600" cy="400" r="34" fill="#000000" stroke="#B7D3F2" stroke-width="6"/>
+    <path d="M600 384 L609 397 L622 400 L609 403 L600 416 L591 403 L578 400 L591 397 Z" fill="#B7D3F2"/>
+  </svg>
+</template>
+
+<!-- icon symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-eye" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="32" cy="32" r="9" fill="currentColor"/>
+      <circle cx="36" cy="28" r="2.4" fill="#000000"/>
+      <line x1="32" y1="2" x2="32" y2="14" stroke="currentColor" stroke-width="2"/>
+      <line x1="32" y1="50" x2="32" y2="62" stroke="currentColor" stroke-width="2"/>
+      <line x1="2" y1="32" x2="14" y2="32" stroke="currentColor" stroke-width="2"/>
+      <line x1="50" y1="32" x2="62" y2="32" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24">
+      <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M7 17 L17 7 M17 7 H10 M17 7 V14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ========== NAV ========== -->
+<nav class="nav">
+  <a class="nav-logo" href="#" aria-label="Back to top"><img src="assets/lucid-blue.png" alt="Lucid" style="height: 45px; width: auto" /></a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about" data-label="About" data-spy="#about">About</a>
+    <a href="#services-anchor" data-label="Services" data-spy="#services-anchor">Services</a>
+    <a href="works.html" data-label="Portfolio" data-spy="#work-anchor" data-nav="portfolio">Portfolio</a>
+    <a href="#testimonials" data-label="Testimonials" data-spy="#testimonials">Testimonials</a>
+  </div>
+  <div class="nav-right">
+    <button class="lang-toggle" id="langToggle" type="button" role="switch" aria-checked="false" aria-label="Switch language to Spanish" data-cursor="cta">
+      <span class="lang-label lang-en">EN</span>
+      <span class="lang-switch">
+        <span class="lang-knob">
+          <svg class="flag flag-uk" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <clipPath id="ukClip"><rect width="60" height="30"></rect></clipPath>
+            <g clip-path="url(#ukClip)">
+              <rect width="60" height="30" fill="#012169"></rect>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="7"></path>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="3"></path>
+              <rect x="25" width="10" height="30" fill="#ffffff"></rect>
+              <rect y="10" width="60" height="10" fill="#ffffff"></rect>
+              <rect x="27" width="6" height="30" fill="#C8102E"></rect>
+              <rect y="12" width="60" height="6" fill="#C8102E"></rect>
+            </g>
+          </svg>
+          <svg class="flag flag-es" viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect width="60" height="40" fill="#AA151B"></rect>
+            <rect y="10" width="60" height="20" fill="#F1BF00"></rect>
+          </svg>
+        </span>
+      </span>
+      <span class="lang-label lang-es">ES</span>
+    </button>
+    <a href="#contact" class="nav-cta" data-cursor="cta">Contact <span class="arrow">↗</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks" data-cursor="cta">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<header class="hero" id="top">
+  <div class="hero-bg"><img class="hero-bg-img" src="assets/star-bg.jpg" alt="" aria-hidden="true" /></div>
+  <canvas id="hero-canvas" class="hero-canvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="eyebrow hero-eyebrow"><span class="eyebrow-row"><svg class="eyebrow-spark" viewBox="0 0 24 24" aria-hidden="true"><path class="s-core" d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/></svg><span style="color:#8A84E2;">Lucid Studio — Small businesses, big ideas</span></span></div>
+    <h1 class="hero-headline">
+      <span class="line"><span class="word" style="font-family: &quot;Cormorant Garamond&quot;; font-weight: 600">Have</span> <span class="word" style="font-family: &quot;Cormorant Garamond&quot;; font-weight: 600">a</span> <span class="word"><em class="accent">vision?</em></span></span>
+      <span class="line" style="font-family: &quot;Cormorant Garamond&quot;; font-weight: 600"><span class="word">Let's</span> <span class="word">bring</span> <span class="word">it</span> <span class="word">into</span></span>
+      <span class="line"><span class="word"><em class="accent">focus.</em></span></span>
+    </h1>
+    <p class="hero-sub">Web design and brand identity with a creative presence your clients can't forget.</p>
+    <a href="#contact" class="btn" data-cursor="cta">Schedule a free consultation <span class="arrow">↗</span></a>
+  </div>
+</header>
+
+<!-- ========== MARQUEE ========== -->
+<section class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span><span class="m-reg">Web Design</span> <span class="star">✦</span> <span class="m-acc">Brand Identity</span> <span class="star">✦</span> <span class="m-reg">Motion &amp; Visuals</span> <span class="star">✦</span> <span class="m-acc">Creative Direction</span> <span class="star">✦</span> <span class="m-reg">Web Design</span> <span class="star">✦</span> <span class="m-acc">Brand Identity</span> <span class="star">✦</span> <span class="m-reg">Motion &amp; Visuals</span> <span class="star">✦</span> <span class="m-acc">Creative Direction</span> <span class="star">✦</span></span>
+    <span><span class="m-reg">Web Design</span> <span class="star">✦</span> <span class="m-acc">Brand Identity</span> <span class="star">✦</span> <span class="m-reg">Motion &amp; Visuals</span> <span class="star">✦</span> <span class="m-acc">Creative Direction</span> <span class="star">✦</span> <span class="m-reg">Web Design</span> <span class="star">✦</span> <span class="m-acc">Brand Identity</span> <span class="star">✦</span> <span class="m-reg">Motion &amp; Visuals</span> <span class="star">✦</span> <span class="m-acc">Creative Direction</span> <span class="star">✦</span></span>
+  </div>
+</section>
+
+<!-- ========== ABOUT + INTO FOCUS (normal flow — the film is a full-width panel that keeps the clip's own 16:9 proportions) ========== -->
+<div class="about-cover">
+  <span id="about" class="nav-marker" aria-hidden="true"></span>
+      <section class="about" data-screen-label="About">
+        <!-- full-section wireframe wash: faint ice-blue grid + shimmer sweep (covers the whole About) -->
+        <div class="about-wire" aria-hidden="true">
+          <div class="wire-grid"></div>
+          <div class="wire-sweep"></div>
+        </div>
+        <div class="about-inner">
+
+    <div class="b-rel">
+      <div class="skel skel-eyebrow" aria-hidden="true"><i class="sb sb-dot"></i><i class="sb" style="width:118px"></i></div>
+      <div class="eyebrow about-eyebrow" data-build><span class="eyebrow-row"><svg class="eyebrow-spark" viewBox="0 0 24 24" aria-hidden="true"><path class="s-core" d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/></svg>About us</span></div>
+    </div>
+
+    <div class="b-rel">
+      <div class="skel skel-quote" aria-hidden="true"><i class="sb" style="width:90%"></i><i class="sb" style="width:62%"></i></div>
+      <blockquote class="about-quote">
+        <span class="aq-line" data-build>The right <span class="rui">digital brand</span> can change</span>
+        <span class="aq-line" data-build><span class="rui">everything</span> for a small business.</span>
+      </blockquote>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-body">
+        <div class="b-rel">
+          <div class="skel skel-para" aria-hidden="true"><i class="sb" style="width:98%"></i><i class="sb" style="width:96%"></i><i class="sb" style="width:99%"></i><i class="sb" style="width:54%"></i></div>
+          <p data-build>We immerse ourselves in your brand's identity, blending technical precision and stunning imaginative design to wow your users. Companies that prioritize customer web experience report 60% higher profits. To this end, Lucid makes your first impression undeniable, with a striking and seamless UI/UX that turns first-time visitors into lasting clients.</p>
+        </div>
+        <div class="b-rel cta-rel">
+          <div class="skel skel-cta" aria-hidden="true"><span class="sb-pill"></span></div>
+          <a href="#contact" class="btn about-cta" data-build data-cursor="cta">Start your project <span class="arrow">↗</span></a>
+        </div>
+      </div>
+      <div class="about-illo b-rel">
+        <div class="illo-wire" aria-hidden="true">
+          <svg class="iw-svg" viewBox="0 0 320 320" preserveAspectRatio="xMidYMax meet" fill="none">
+            <rect x="8" y="8" width="304" height="304" rx="12" class="iw-frame"/>
+            <line x1="8" y1="112" x2="312" y2="112" class="iw-grid"/>
+            <line x1="8" y1="208" x2="312" y2="208" class="iw-grid"/>
+            <line x1="112" y1="8" x2="112" y2="312" class="iw-grid"/>
+            <line x1="208" y1="8" x2="208" y2="312" class="iw-grid"/>
+            <circle cx="160" cy="160" r="84" class="iw-orbit"/>
+            <circle cx="160" cy="160" r="44" class="iw-orbit"/>
+            <circle cx="160" cy="76" r="7" class="iw-node"/>
+            <circle cx="244" cy="160" r="6" class="iw-node"/>
+            <circle cx="160" cy="160" r="3" class="iw-node"/>
+          </svg>
+        </div>
+        <img src="assets/about-graphic-1.png" alt="Lucid team collaborating on a brand dashboard" data-build />
+      </div>
+    </div>
+        </div>
+      </section>
+
+  <!-- INTO FOCUS — full-bleed film panel, 16:9, rounded corners are the only crop -->
+  <section class="into-focus" id="into-focus" data-screen-label="Into Focus" aria-label="Lucid — Into Focus motion piece">
+    <iframe class="film-frame" title="Lucid — Into Focus" tabindex="-1" scrolling="no" loading="lazy" data-src="film/into-focus.html"></iframe>
+  </section>
+</div>
+
+<!-- ========== SERVICES + PORTFOLIO COVER-SCROLL ========== -->
+<div class="cover-scroll">
+
+  <span id="services-anchor" class="nav-marker" aria-hidden="true"></span>
+  <span id="work-anchor" class="nav-marker" aria-hidden="true"></span>
+
+  <div class="cover-viewport">
+  <div class="services-pinned">
+    <section class="services-section" id="services">
+      <div class="services-inner services-redux">
+        <div class="services-left">
+          <div class="eyebrow services-eyebrow"><span class="eyebrow-row"><svg class="eyebrow-spark" viewBox="0 0 24 24" aria-hidden="true"><path class="s-core" d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/></svg>What we do</span></div>
+          <h2>Three crafts. <em class="rui">One studio.</em></h2>
+          <div class="compass-wrap" aria-hidden="true">
+            <img class="services-compass" src="assets/compass-rose.png" alt="" />
+          </div>
+        </div>
+
+        <div class="services-right">
+
+          <article class="svc-row">
+            <div class="svc-row-top">
+              <h3><em>Web</em> Production</h3>
+              <div class="icon-wrap" style="color:var(--icy);">
+                <svg width="44" height="44" viewBox="0 0 64 64" fill="none">
+                  <rect x="6" y="12" width="52" height="36" rx="3" stroke="currentColor" stroke-width="2"/>
+                  <line x1="6" y1="22" x2="58" y2="22" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="11" cy="17" r="1.5" fill="currentColor"/>
+                  <circle cx="16" cy="17" r="1.5" fill="currentColor"/>
+                  <circle cx="21" cy="17" r="1.5" fill="currentColor"/>
+                  <line x1="14" y1="32" x2="36" y2="32" stroke="currentColor" stroke-width="2"/>
+                  <line x1="14" y1="38" x2="28" y2="38" stroke="currentColor" stroke-width="2"/>
+                  <rect x="40" y="30" width="12" height="12" rx="2" fill="currentColor"/>
+                  <line x1="22" y1="48" x2="42" y2="48" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <line x1="32" y1="48" x2="32" y2="56" stroke="currentColor" stroke-width="2"/>
+                  <line x1="22" y1="56" x2="42" y2="56" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            <p>Your website is your first impression. We build yours to captivate people mid-scroll—striking, seamless, and built to last.</p>
+            <div class="svc-tags">
+              <span class="chip">Responsive web design</span>
+              <span class="chip">Immersive visuals</span>
+              <span class="chip">Built for client engagement</span>
+            </div>
+          </article>
+
+          <div class="svc-div"></div>
+
+          <article class="svc-row">
+            <div class="svc-row-top">
+              <h3><em>Brand</em> Identity</h3>
+              <div class="icon-wrap" style="color:#8A84E2;">
+                <svg width="44" height="44" viewBox="0 0 64 64" fill="none">
+                  <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="32" cy="32" r="14" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="32" cy="32" r="5" fill="currentColor"/>
+                  <line x1="32" y1="2" x2="32" y2="10" stroke="currentColor" stroke-width="2"/>
+                  <line x1="32" y1="54" x2="32" y2="62" stroke="currentColor" stroke-width="2"/>
+                  <line x1="2" y1="32" x2="10" y2="32" stroke="currentColor" stroke-width="2"/>
+                  <line x1="54" y1="32" x2="62" y2="32" stroke="currentColor" stroke-width="2"/>
+                  <use href="#i-spark" x="48" y="6" width="10" height="10" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+            <p>We get clear on who you are and where you're going—then build a brand that makes both impossible to miss.</p>
+            <div class="svc-tags">
+              <span class="chip">Logo design</span>
+              <span class="chip">Visual identity</span>
+              <span class="chip">Social media kit</span>
+              <span class="chip">Marketing materials</span>
+            </div>
+          </article>
+
+          <div class="svc-div"></div>
+
+          <article class="svc-row">
+            <div class="svc-row-top">
+              <h3><em>Motion</em> &amp; Visuals</h3>
+              <div class="icon-wrap" style="color:#79BEEE;">
+                <svg width="44" height="44" viewBox="0 0 64 64" fill="none">
+                  <path d="M8 40 Q16 18, 28 32 T56 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <circle cx="8" cy="40" r="3" fill="currentColor"/>
+                  <circle cx="56" cy="24" r="3" fill="currentColor"/>
+                  <use href="#i-spark" x="34" y="6" width="14" height="14" fill="currentColor"/>
+                  <use href="#i-spark" x="14" y="48" width="10" height="10" fill="currentColor"/>
+                  <path d="M44 50 L52 46 L52 54 Z" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+            <p>Great brands don't just communicate—they captivate. We bring your identity to life with visuals and motion that leave a mark.</p>
+            <div class="svc-tags">
+              <span class="chip">Icons &amp; illustrations</span>
+              <span class="chip">Banners &amp; ads</span>
+              <span class="chip">UI animation</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- portfolio overlay slides up to cover services -->
+  <section class="portfolio-overlay" id="portfolio">
+    <div class="portfolio-inner">
+      <div class="portfolio-head">
+        <div>
+          <div class="eyebrow" style="margin-bottom: 22px;"><span class="eyebrow-row"><svg class="eyebrow-spark" viewBox="0 0 24 24" aria-hidden="true"><path class="s-core" d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/></svg>Our work</span></div>
+          <h2 class="fit-head"><span class="fit-line">Built with intention.</span> <span class="fit-line"><em class="rui">Designed to last.</em></span></h2>
+        </div>
+        <div class="portfolio-controls">
+          <button class="arrow-btn" id="p-prev" aria-label="Previous" data-cursor="cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6 L9 12 L15 18"/></svg>
+          </button>
+          <button class="arrow-btn" id="p-next" aria-label="Next" data-cursor="cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6 L15 12 L9 18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="portfolio-track">
+        <div class="portfolio-rail" id="p-rail">
+
+          <article class="case case--hoverplay" data-loop-src="film/unbound-loop.html" data-loop-res="unboundLoop">
+            <div class="case-art">
+              <span class="case-badge">01</span>
+              <iframe class="case-embed" title="UNbound loop" tabindex="-1" scrolling="no" aria-hidden="true"></iframe>
+              <img class="case-thumb" src="assets/unbound-thumbnail.jpg" alt="UNbound website homepage" />
+            </div>
+            <div class="case-meta">
+              <div class="case-tag">International Non-Profit</div>
+              <h3><em>UNbound</em> Youth Initiative</h3>
+              <p class="case-desc">A website and brand identity that scaled their student project into a global movement.</p>
+              <div class="case-services">
+                <span class="chip">Brand Identity</span>
+                <span class="chip">Web Design</span>
+                <span class="chip">Logo Design</span>
+                <span class="chip">UI Animation</span>
+              </div>
+              <a href="https://unboundyi.org" target="_blank" rel="noopener" class="case-visit" data-cursor="cta">Visit site <span class="arrow">↗</span></a>
+            </div>
+          </article>
+
+          <article class="case case--hovervid">
+            <div class="case-art">
+              <span class="case-badge">02</span>
+              <video class="case-vid" muted loop playsinline preload="none" poster="assets/carwash-thumbnail.png">
+                <source src="film/carwashmx.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="case-meta">
+              <div class="case-tag">PREMIUM AUTO CARE</div>
+              <h3><em>CarWash</em> MX</h3>
+              <p class="case-desc">A digital home that took a single-location business and gave it a client experience driving retention.</p>
+              <div class="case-services">
+                <span class="chip">Web Production</span>
+                <span class="chip">Built for client engagement</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="case case--hovervid">
+            <div class="case-art">
+              <span class="case-badge">03</span>
+              <video class="case-vid" muted loop playsinline preload="none" poster="assets/flor-tierra.png">
+                <source src="film/flortierra.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="case-meta">
+              <div class="case-tag">Artesanal Snacks</div>
+              <h3><em>Flor</em> Tierra</h3>
+              <p class="case-desc">A Mexican homemade snack maker with an online store as wholesome as its ingredients.</p>
+              <div class="case-services">
+                <span class="chip">Responsive web design</span>
+                <span class="chip">E-commerce</span>
+                <span class="chip">Icons &amp; illustrations</span>
+              </div>
+              <a href="https://flortierra.com" target="_blank" rel="noopener" class="case-visit" data-cursor="cta">Visit site <span class="arrow">↗</span></a>
+            </div>
+          </article>
+
+          <article class="case case--hovervid">
+            <div class="case-art">
+              <span class="case-badge">04</span>
+              <video class="case-vid" muted loop playsinline preload="none" poster="assets/abimerhi.png">
+                <source src="film/abimerhi.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="case-meta">
+              <div class="case-tag">Financial Consulting</div>
+              <h3><em>Abimerhi</em> Consultores</h3>
+              <p class="case-desc">A Mexican consulting firm elevated by a commanding digital presence built to win trust on arrival.</p>
+              <div class="case-services">
+                <span class="chip">Responsive web design</span>
+                <span class="chip">Immersive visuals</span>
+                <span class="chip">Built for client engagement</span>
+              </div>
+              <a href="https://abimerhiconsultores.com" target="_blank" rel="noopener" class="case-visit" data-cursor="cta">Visit site <span class="arrow">↗</span></a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="portfolio-foot">
+        <a href="works.html" class="btn see-all-cta" data-cursor="cta">See all work <span class="arrow">↗</span></a>
+      </div>
+    </div>
+  </section>
+  </div>
+</div>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <div class="eyebrow" style="margin-bottom: 22px;"><span class="eyebrow-row"><svg class="eyebrow-spark" viewBox="0 0 24 24" aria-hidden="true"><path class="s-core" d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/></svg>What our clients say</span></div>
+    <div class="t-head">
+      <h2 class="fit-head"><span class="fit-line">Words from the <em class="rui">founders</em></span> <span class="fit-line">we've built alongside.</span></h2>
+      <div class="portfolio-controls">
+        <button class="arrow-btn" id="t-prev" aria-label="Previous" data-cursor="cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6 L9 12 L15 18"/></svg>
+        </button>
+        <button class="arrow-btn" id="t-next" aria-label="Next" data-cursor="cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6 L15 12 L9 18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="t-track-wrap">
+      <div class="t-track" id="t-track">
+        <article class="t-card icy">
+          <div class="t-quote"><span style="font-style:normal">In</span> <em>progress</em><span style="font-style:normal">...</span></div>
+          <div class="t-cite"><span class="t-avatar" aria-hidden="true">CF</span><div class="t-cite-text"><div class="name">Cristina Fernández</div><div class="biz">Flor Tierra</div></div></div>
+        </article>
+        <article class="t-card icy">
+          <div class="t-quote"><span style="font-style:normal">In</span> <em>progress</em><span style="font-style:normal">...</span></div>
+          <div class="t-cite"><span class="t-avatar" aria-hidden="true">EA</span><div class="t-cite-text"><div class="name">Emilio Abimerhi</div><div class="biz">Abimerhi Consultores</div></div></div>
+        </article>
+        <article class="t-card icy">
+          <div class="t-quote">"Lucid has taken our vision of a simple and effective website and <em>elevated its professionalism to the highest level,</em> ensuring our collaborators the ultimate experience."</div>
+          <div class="t-cite"><span class="t-avatar t-avatar-img" aria-hidden="true"><img src="assets/eugenio.png" alt="" /></span><div class="t-cite-text"><div class="name">Eugenio Laddaga</div><div class="biz">UNbound Youth Initiative Associate Director</div></div></div>
+        </article>
+        <article class="t-card icy">
+          <div class="t-quote">"Lucid revamped my lackluster novel design through its <em>riveting original illustrations and creative direction,</em> transforming my book with best-seller-quality graphics."</div>
+          <div class="t-cite"><span class="t-avatar t-avatar-img" aria-hidden="true"><img src="assets/emilio-yee.png" alt="" /></span><div class="t-cite-text"><div class="name">Emilio Yee</div><div class="biz">Independent Novelist</div></div></div>
+        </article>
+        <article class="t-card icy">
+          <div class="t-quote">"Lucid's work designing the identity for our two-hundred-person event was <em>nothing short of incredible.</em> They were communicative, creative, and efficient. Will definitely hire again."</div>
+          <div class="t-cite"><span class="t-avatar" aria-hidden="true">EP</span><div class="t-cite-text"><div class="name">Emilio Páez</div><div class="biz">Event Organizer</div></div></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section class="contact" id="contact">
+  <div class="contact-glow"></div>
+  <div class="contact-inner">
+    <div class="vision-box">
+      <div class="vision-inner">
+        <div class="vision-text">
+          <div class="eyebrow vision-eyebrow"><span class="eyebrow-row"><svg class="eyebrow-spark" viewBox="0 0 24 24" aria-hidden="true"><path class="s-core" d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/></svg>Start a project</span></div>
+          <h2 class="fit-head contact-head">
+            <span class="fit-line">Have a <span class="rui-accent">vision?</span> <span class="cohere">Let's bring it into <span class="focus-word">focus.</span></span></span>
+          </h2>
+          <p class="contact-sub contact-sub-wide">Tell us about your project and we'll take it from there. No bots. No forms to nowhere. We'll reply within two business days to set up a free consultation.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <form class="contact-card-fields" id="contactForm">
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" name="full_name" required placeholder="Your name" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="you@studio.com" />
+      </div>
+      <div class="field">
+        <label>Organization</label>
+        <input type="text" name="organization" required placeholder="Company or project name" />
+      </div>
+      <div class="field">
+        <label>Phone <span class="opt">(optional)</span></label>
+        <input type="tel" name="phone" placeholder="+1 ..." />
+      </div>
+      <div class="field full">
+        <label>Estimated budget <span class="opt">(optional)</span></label>
+        <input type="text" name="budget" placeholder="e.g. $1k-2k" />
+      </div>
+      <div class="field full">
+        <label>Describe your project</label>
+        <textarea name="message" required placeholder="What are you building, and what does success look like?"></textarea>
+      </div>
+      <div class="form-foot">
+        <button type="submit" class="btn" data-cursor="cta">Send it. <span class="arrow">↗</span></button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </div>
+      </form>
+      <div class="contact-card-illo">
+        <img src="assets/contact-puzzle.png" alt="A team fitting puzzle pieces together" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="foot">
+  <div class="foot-logo"><img src="assets/lucid-blue.png" alt="Lucid" /></div>
+  <nav class="foot-nav">
+    <a href="#about">About</a>
+    <a href="#services-anchor">Services</a>
+    <a href="works.html">Portfolio</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="foot-social">
+    <a href="mailto:lucid.studio.hq@gmail.com" data-cursor="cta">lucid.studio.hq@gmail.com</a>
+  </div>
+  <div class="foot-bottom">
+    <span>© Lucid 2026. All rights reserved.</span>
+    <span>Small businesses, big ideas.</span>
+  </div>
+</footer>
+
+<script src="js/cursor.js?v=2"></script>
+<script src="js/starmap.js?v=10"></script>
+<script src="js/reveals.js?v=39"></script>
+<script src="js/about-build.js?v=9"></script>
+<script src="js/film.js?v=16"></script>
+<script src="js/i18n.js?v=1"></script>
+
+<!-- ========== EMAILJS — contact form delivery ========== -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+(function () {
+  // ⬇️ PASTE YOUR EMAILJS PUBLIC KEY BETWEEN THE QUOTES ⬇️
+  var EMAILJS_PUBLIC_KEY = "clrbT7zBkMS1bIpc0";
+  var SERVICE_ID  = "service_n3v5hk7";
+  var TEMPLATE_ID = "template_ziydmfp";
+
+  var form   = document.getElementById("contactForm");
+  var status = document.getElementById("formStatus");
+  if (!form || !window.emailjs) return;
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  function setStatus(msg, state) {
+    status.textContent = msg;
+    status.className = "form-status" + (state ? " is-" + state : "");
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY") {
+      setStatus("Add your EmailJS public key to enable sending.", "error");
+      return;
+    }
+
+    var btn = form.querySelector('button[type="submit"]');
+    var btnHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Sending\u2026';
+    setStatus("", "");
+
+    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
+      .then(function () {
+        form.reset();
+        setStatus("Thanks \u2014 your message is on its way.\nWe'll reply within two business days.", "success");
+      })
+      .catch(function (err) {
+        setStatus("Something went wrong. Please try again or email us directly at lucid.studio.hq@gmail.com.", "error");
+        console.error("EmailJS error:", err);
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.innerHTML = btnHTML;
+      });
+  });
+})();
+</script>
+</body>
+</html>
