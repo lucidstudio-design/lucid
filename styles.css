@@ -848,7 +848,6 @@ img { display: block; max-width: 100%; }
   border-radius: 32px 32px 0 0;
   padding: 56px 48px 40px;
   display: flex; flex-direction: column;
-  transform: translateZ(0);
 }
 .portfolio-overlay .portfolio-inner {
   max-width: var(--content-max); width: 100%; margin: 0 auto;
