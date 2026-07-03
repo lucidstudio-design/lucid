@@ -1482,7 +1482,7 @@ body.cursor-on-peri .cursor-dot { filter: hue-rotate(190deg) brightness(1.2); }
 .works-page { background: var(--bg); color: var(--text); padding-top: 108px; }
 /* Icy header band — everything above the 'Explore all' filter row, with curved
    top corners that reveal the black page behind (a docked-panel look). */
-.works-top { background: var(--icy); color: #000000; border-radius: 34px 34px 0 0; transform: translateZ(0); }
+.works-top { background: var(--icy); color: #000000; border-radius: 34px 34px 0 0; }
 .works-hero {
   position: relative;
   padding: var(--vpad) var(--gutter);
@@ -1533,7 +1533,11 @@ body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
 .case-visit .arrow { display: inline-block; transform: rotate(45deg); transition: transform 0.4s cubic-bezier(.22,.8,.36,1); }
 .case-visit:hover .arrow { transform: rotate(0deg); }
 @media (max-width: 900px) {
-  .works-page { padding-top: 72px; }
+  /* Nav's tallest child here is the 46px hamburger circle (14px padding each
+     side + border), so it renders ~75px tall — a couple of px taller than this
+     offset used to allow, which let the fixed nav overlap the panel's rounded
+     top edge. 76px clears it. */
+  .works-page { padding-top: 76px; }
   .works-top { border-radius: 24px 24px 0 0; }
 }
 
