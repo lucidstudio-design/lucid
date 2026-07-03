@@ -848,6 +848,7 @@ img { display: block; max-width: 100%; }
   border-radius: 32px 32px 0 0;
   padding: 56px 48px 40px;
   display: flex; flex-direction: column;
+  transform: translateZ(0);
 }
 .portfolio-overlay .portfolio-inner {
   max-width: var(--content-max); width: 100%; margin: 0 auto;
@@ -1482,7 +1483,7 @@ body.cursor-on-peri .cursor-dot { filter: hue-rotate(190deg) brightness(1.2); }
 .works-page { background: var(--bg); color: var(--text); padding-top: 108px; }
 /* Icy header band — everything above the 'Explore all' filter row, with curved
    top corners that reveal the black page behind (a docked-panel look). */
-.works-top { background: var(--icy); color: #000000; border-radius: 34px 34px 0 0; }
+.works-top { background: var(--icy); color: #000000; border-radius: 34px 34px 0 0; transform: translateZ(0); }
 .works-hero {
   position: relative;
   padding: var(--vpad) var(--gutter);
