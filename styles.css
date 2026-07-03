@@ -1588,7 +1588,7 @@ body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
 @media (max-width: 860px) {
   .works-grid { grid-template-columns: 1fr; }
   .works-hero { grid-template-columns: 1fr; gap: 34px; padding-top: var(--vpad); }
-  .works-filmchip { max-width: 540px; }
+  .works-filmchip { max-width: 100%; margin: 0 auto; }
   .works-hero, .works-filter-wrap, .works-grid-wrap { padding-left: 24px; padding-right: 24px; }
 }
 
