@@ -48,8 +48,8 @@
 
 /* fragment-navigation offsets so section headings clear the fixed nav */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-.about, .testimonials, .contact { scroll-margin-top: 108px; }
-#services-anchor, #work-anchor { scroll-margin-top: 0; }
+.about, .testimonials, .contact,
+#about, #services-anchor, #work-anchor { scroll-margin-top: 108px; }
 
 html, body {
   background: var(--bg);
@@ -1382,7 +1382,8 @@ body.cursor-on-peri .cursor-dot { filter: hue-rotate(190deg) brightness(1.2); }
   .portfolio-rail { height: auto; align-items: stretch; }
   .case-art { aspect-ratio: 16 / 9; height: auto; min-height: 0; flex: none; }
   .case-meta { overflow: visible; }
-  .about, .testimonials, .contact { scroll-margin-top: 64px; }
+  .about, .testimonials, .contact,
+  #about, #services-anchor, #work-anchor { scroll-margin-top: 64px; }
   /* When the Contact expand-on-arrival effect drops, the periwinkle box assumes
      curved top edges (matching the Portfolio panel) instead of a hard square. */
   .vision-box { border-radius: 28px 28px 0 0; }

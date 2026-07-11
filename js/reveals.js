@@ -379,10 +379,10 @@
         try { setFramePlaying(frame, hovering); } catch (e) {}
       }, t));
     }
-    // The loop bundle is large (~12MB). It now MOUNTS EAGERLY (right after the
-    // page settles, via idle time) so it's downloaded and sitting paused on its
-    // first frame, ready for an instant, jump-free hover — instead of mounting on
-    // first hover (which showed a black panel, then cut several seconds in).
+    // The loop bundle is large (up to ~27MB) — it mounts ONLY when the card is
+    // actually engaged (hovered, or ≥50% in view on touch), not eagerly for every
+    // visitor. First engagement pays a brief load delay instead of everyone
+    // paying the full download whether or not they ever see the animation.
     const mount = () => {
       if (mounted) return;
       frame.src = SRC;
@@ -390,8 +390,6 @@
       frame.addEventListener('load', settle);
       settle();
     };
-    if ('requestIdleCallback' in window) { requestIdleCallback(() => mount(), { timeout: 2600 }); }
-    else { setTimeout(mount, 600); }
     if ('ResizeObserver' in window) { new ResizeObserver(placeLoop).observe(art); }
     window.addEventListener('resize', placeLoop);
     card.addEventListener('mouseenter', () => {
@@ -414,7 +412,7 @@
         ents.forEach((en) => {
           const inview = en.isIntersecting && en.intersectionRatio >= 0.5;
           hovering = inview;
-          mount();
+          if (inview) mount();
           card.classList.toggle('is-playing', inview);
           setFramePlaying(frame, inview);
         });

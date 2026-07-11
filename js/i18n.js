@@ -36,6 +36,7 @@
     "Responsive web design": "Diseño web responsivo",
     "Immersive visuals": "Visuales inmersivos",
     "Built for client engagement": "Diseñado para fidelizar clientes",
+    "Search Engine Optimization": "Optimización para motores de búsqueda",
     "Logo design": "Diseño de logotipo",
     "Logo Design": "Diseño de logotipo",
     "Visual identity": "Identidad visual",
@@ -53,7 +54,6 @@
     "Financial Consulting": "Consultoría financiera",
 
     /* testimonial roles */
-    "UNbound Youth Initiative Associate Director": "Director Asociado, UNbound Youth Initiative",
     "Independent Novelist": "Novelista independiente",
     "Event Organizer": "Organizador de eventos",
 
