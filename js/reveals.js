@@ -281,147 +281,7 @@
   window.addEventListener('resize', updateSpy);
   updateSpy();
 
-  /* ---- UNbound case: thumbnail at rest; the embedded loop animation is a
-     heavy self-contained bundle, so we mount it ONCE (lazily, on first hover)
-     and keep it loaded. The bundled engine fits its 1920×1080 design into the
-     stage with its OWN internal padding, so left as-is it shows a black border.
-     We measure that rendered design and scale the iframe up so it fills the box
-     exactly; the surplus is cropped by .case-art's overflow:hidden. The design's
-     fit-size is constant (independent of the animation frame), so one good
-     measurement holds — we just retry a few times until the engine settles,
-     then on resize. The box never changes size. ---- */
-  // Gap-free pause/resume for a same-origin iframe animation. Patching the iframe
-  // window's GLOBAL requestAnimationFrame (re-requested each frame) lets us hold
-  // the loop while the card isn't hovered; feeding it a virtual clock (real time
-  // minus paused time) means resuming never jumps forward.
-  function patchRAF(win) {
-    if (!win || win.__lucidRAFPatched) return !!(win && win.__lucidRAFPatched);
-    let nativeRAF;
-    try { nativeRAF = win.requestAnimationFrame; } catch (e) { return false; }
-    if (typeof nativeRAF !== 'function') return false;
-    nativeRAF = nativeRAF.bind(win);
-    let paused = false, pending = null, lastTs = 0, skew = 0;
-    win.requestAnimationFrame = function (cb) {
-      if (paused) { pending = cb; return 0; }
-      return nativeRAF(function (ts) { lastTs = ts; cb(ts - skew); });
-    };
-    win.__lucidPause = function () { if (paused) return; paused = true; };
-    win.__lucidResume = function () {
-      if (!paused) return;
-      paused = false;
-      if (pending) {
-        const c = pending; pending = null;
-        nativeRAF(function (ts) { skew += ts - lastTs; lastTs = ts; c(ts - skew); });
-      }
-    };
-    win.__lucidRAFPatched = true;
-    return true;
-  }
-  function setFramePlaying(frame, on) {
-    let win; try { win = frame.contentWindow; } catch (e) { return; }
-    if (!win) return;
-    patchRAF(win);
-    if (!win.__lucidRAFPatched) return;
-    // Never pause before the loop has mounted (its first render is rAF-scheduled).
-    let ready = false;
-    try { const d = frame.contentDocument; const r = d && d.getElementById && d.getElementById('root'); ready = !!(r && r.children.length); } catch (e) {}
-    if (!ready || on) { if (win.__lucidResume) win.__lucidResume(); }
-    else { if (win.__lucidPause) win.__lucidPause(); }
-  }
-
-  document.querySelectorAll('.case--hoverplay').forEach((card) => {
-    const frame = card.querySelector('iframe.case-embed');
-    const art   = card.querySelector('.case-art');
-    if (!frame || !art) return;
-    const resKey = card.dataset.loopRes;
-    const SRC = (window.__resources && resKey && window.__resources[resKey]) || card.dataset.loopSrc || 'film/unbound-loop.html';
-    let mounted = false;
-    let hovering = false;
-
-    // Deterministic sizing (same math as the Into Focus film): size + centre the
-    // iframe so its 16:9 canvas covers the 16:9 art box EXACTLY — no transform
-    // zoom (which cropped the loop) and no measure-and-scale (whose rounding left
-    // a thin black outline that shifted with the animation). PAD pushes the clip's
-    // playback bar off the bottom; BLEED is a hairline overscan against seams.
-    const PAD = 244, BLEED = 1.004;
-    function placeLoop() {
-      const CW = art.clientWidth, CH = art.clientHeight;
-      if (!CW || !CH) return;
-      const iw = CW * BLEED;
-      const canvasH = iw * 9 / 16;
-      const ih = canvasH + PAD;
-      frame.style.inset = 'auto';
-      frame.style.transform = 'none';
-      frame.style.left = ((CW - iw) / 2).toFixed(2) + 'px';
-      frame.style.top = ((CH - ih) / 2).toFixed(2) + 'px';
-      frame.style.width = iw.toFixed(2) + 'px';
-      frame.style.height = ih.toFixed(2) + 'px';
-    }
-    function hideLoopBar() {
-      try {
-        const doc = frame.contentDocument;
-        if (!doc || !doc.body) return false;
-        let ok = false;
-        doc.querySelectorAll('body div').forEach((el) => {
-          const s = el.getAttribute('style') || '';
-          if (s.indexOf('border-top') !== -1 && s.indexOf('max-width: 680px') !== -1) {
-            if (el.style.display !== 'none') el.style.display = 'none';
-            ok = true;
-          }
-        });
-        return ok;
-      } catch (e) { return false; }
-    }
-    function settle() {
-      [120, 320, 700, 1300, 2200].forEach((t) => setTimeout(() => {
-        placeLoop();
-        hideLoopBar();
-        try { setFramePlaying(frame, hovering); } catch (e) {}
-      }, t));
-    }
-    // The loop bundle is large (up to ~27MB) — it mounts ONLY when the card is
-    // actually engaged (hovered, or ≥50% in view on touch), not eagerly for every
-    // visitor. First engagement pays a brief load delay instead of everyone
-    // paying the full download whether or not they ever see the animation.
-    const mount = () => {
-      if (mounted) return;
-      frame.src = SRC;
-      mounted = true;
-      frame.addEventListener('load', settle);
-      settle();
-    };
-    if ('ResizeObserver' in window) { new ResizeObserver(placeLoop).observe(art); }
-    window.addEventListener('resize', placeLoop);
-    card.addEventListener('mouseenter', () => {
-      hovering = true;
-      mount();
-      card.classList.add('is-playing');
-      setFramePlaying(frame, true);
-    });
-    card.addEventListener('mouseleave', () => {
-      hovering = false;
-      card.classList.remove('is-playing');
-      setFramePlaying(frame, false);
-    });
-
-    // Touch / no-hover devices: the loop autoplays whenever the card is at least
-    // half in view, and pauses once it scrolls away.
-    const coarse = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
-    if (coarse && 'IntersectionObserver' in window) {
-      const vio = new IntersectionObserver((ents) => {
-        ents.forEach((en) => {
-          const inview = en.isIntersecting && en.intersectionRatio >= 0.5;
-          hovering = inview;
-          if (inview) mount();
-          card.classList.toggle('is-playing', inview);
-          setFramePlaying(frame, inview);
-        });
-      }, { threshold: [0, 0.5, 1] });
-      vio.observe(card);
-    }
-  });
-
-  /* ---- Cards that play an mp4 on hover (CarWash MX, Flor Tierra, Abimerhi).
+  /* ---- Cards that play an mp4 on hover (UNbound, CarWash MX, Flor Tierra, Abimerhi).
      Desktop: play on hover, pause on leave. Touch / no-hover: autoplay while the
      card is ≥50% in view. The poster (still image) shows until the .mp4 exists. */
   document.querySelectorAll('.case--hovervid').forEach((card) => {
@@ -436,6 +296,21 @@
       new IntersectionObserver((ents) => {
         ents.forEach((en) => { (en.isIntersecting && en.intersectionRatio >= 0.5) ? play() : stop(); });
       }, { threshold: [0, 0.5, 1] }).observe(card);
+    }
+  });
+
+  /* ---- Hero/Into-Focus clip (homepage + Portfolio tab header): plays whenever
+     ≥25% in view, pauses when scrolled away. Also acts as an autoplay fallback —
+     some browsers ignore the autoplay attribute until play() is called directly. */
+  document.querySelectorAll('.film-frame').forEach((vid) => {
+    const play = () => { const p = vid.play(); if (p && p.catch) p.catch(() => {}); };
+    const stop = () => { try { vid.pause(); } catch (e) {} };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((ents) => {
+        ents.forEach((en) => { en.isIntersecting ? play() : stop(); });
+      }, { threshold: [0, 0.25] }).observe(vid);
+    } else {
+      play();
     }
   });
 

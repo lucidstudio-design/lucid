@@ -544,8 +544,7 @@ img { display: block; max-width: 100%; }
   width: 100%; height: 100%;
   border: 0; display: block;
   background: #0a0e1c;
-  /* JS maps the clip's inner 16:9 stage exactly onto this panel (uniform
-     translate+scale): edge-to-edge, control bar pushed off the bottom. */
+  object-fit: cover;
   pointer-events: none;        /* can't be paused or scrubbed */
 }
 
@@ -906,31 +905,6 @@ img { display: block; max-width: 100%; }
   width: calc(100% + 2px); height: calc(100% + 2px);
   object-fit: cover; display: block;
 }
-/* UNbound case: static thumbnail at rest; hovering anywhere on the card fades it
-   out and the loop video plays from 0:00. Both layers fill the same box, so the
-   container never changes size. */
-.case-thumb {
-  position: absolute; inset: -1px;
-  width: calc(100% + 2px); height: calc(100% + 2px);
-  object-fit: cover; display: block;
-  z-index: 1;
-  opacity: 1;
-  transition: opacity 0.35s ease;
-}
-.case--hoverplay.is-playing .case-thumb { opacity: 0; }
-/* embedded standalone loop — the animation and the card box are both 16:9, so
-   the iframe simply fills the box: the loop sits edge-to-edge, no side margins. */
-.case-embed {
-  position: absolute; inset: -1px;
-  width: calc(100% + 2px); height: calc(100% + 2px);
-  border: 0; display: block; background: transparent;
-  pointer-events: none;
-  z-index: 0;
-  /* The loop is invisible until the card is hovered (and playing), so it never
-     shows through at the thumbnail's edges. */
-  opacity: 0; transition: opacity 0.35s ease;
-}
-.case--hoverplay.is-playing .case-embed { opacity: 1; }
 .case-badge {
   position: absolute; top: 18px; left: 18px; z-index: 2;
   width: 46px; height: 46px; border-radius: 50%;
@@ -1510,12 +1484,13 @@ body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
   border-radius: 24px; overflow: hidden; background: #0a0e1c;
   box-shadow: 0 24px 60px rgba(0,0,0,0.28);
 }
-.works-filmchip iframe {
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; height: calc(100% + 48px); border: 0; display: block; pointer-events: none;
+.works-filmchip video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  border: 0; display: block; pointer-events: none;
 }
 .works-filter-wrap { border-top: 1px solid var(--border); }
-/* mp4 hover-play media fills the card art box (CarWash MX, Flor Tierra, Abimerhi) */
+/* mp4 hover-play media fills the card art box (UNbound, CarWash MX, Flor Tierra, Abimerhi) */
 .case-art .case-vid {
   position: absolute; inset: -1px;
   width: calc(100% + 2px); height: calc(100% + 2px);
@@ -1579,7 +1554,6 @@ body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
   .works-grid .case:hover { transform: translateY(-8px); box-shadow: 0 26px 66px rgba(0,0,0,0.55); }
   .works-grid .case:hover .case-art img,
   .works-grid .case:hover .case-art .placeholder { transform: scale(1.06); }
-  .works-grid .case--hoverplay:hover .case-embed { transform: none; }
 }
 /* Same hover-rise the Portfolio-tab cards have, applied to the homepage rail. */
 @media (hover: hover) and (pointer: fine) {

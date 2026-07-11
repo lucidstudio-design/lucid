@@ -35,10 +35,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css?v=35" />
 <link id="gfont-Playfair-Display" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&amp;display=swap">
-<!-- Resources referenced from JS (iframe HTML bundles) — lifted so the standalone bundler can inline them. -->
-<meta name="ext-resource-dependency" content="film/into-focus.html" data-resource-id="intoFocus" />
-<meta name="ext-resource-dependency" content="film/unbound-loop.html" data-resource-id="unboundLoop" />
-<meta name="ext-resource-dependency" content="film/carwash-mx.html" data-resource-id="carwashFilm" />
 <meta name="ext-resource-dependency" content="film/flor-tierra.html" data-resource-id="florFilm" />
 <meta name="ext-resource-dependency" content="film/abimerhi.html" data-resource-id="abimerhiFilm" />
 </head>
@@ -240,7 +236,9 @@
 
   <!-- INTO FOCUS — full-bleed film panel, 16:9, rounded corners are the only crop -->
   <section class="into-focus" id="into-focus" data-screen-label="Into Focus" aria-label="Lucid — Into Focus motion piece">
-    <iframe class="film-frame" title="Lucid — Into Focus" tabindex="-1" scrolling="no" loading="lazy" data-src="film/into-focus.html"></iframe>
+    <video class="film-frame" title="Lucid — Into Focus" muted loop autoplay playsinline preload="none" poster="assets/into-focus-poster.jpg">
+      <source src="film/into-focus.mp4" type="video/mp4" />
+    </video>
   </section>
 </div>
 
@@ -369,11 +367,12 @@
       <div class="portfolio-track">
         <div class="portfolio-rail" id="p-rail">
 
-          <article class="case case--hoverplay" data-loop-src="film/unbound-loop.html" data-loop-res="unboundLoop">
+          <article class="case case--hovervid">
             <div class="case-art">
               <span class="case-badge">01</span>
-              <iframe class="case-embed" title="UNbound loop" tabindex="-1" scrolling="no" aria-hidden="true"></iframe>
-              <img class="case-thumb" src="assets/unbound-thumbnail.jpg" alt="UNbound website homepage" />
+              <video class="case-vid" muted loop playsinline preload="none" poster="assets/unbound-thumbnail.jpg">
+                <source src="film/unbound-loop.mp4" type="video/mp4" />
+              </video>
             </div>
             <div class="case-meta">
               <div class="case-tag">International Non-Profit</div>
@@ -389,11 +388,12 @@
             </div>
           </article>
 
-          <article class="case case--hoverplay" data-loop-src="film/carwash-mx.html" data-loop-res="carwashFilm">
+          <article class="case case--hovervid">
             <div class="case-art">
               <span class="case-badge">02</span>
-              <iframe class="case-embed" title="CarWash MX loop" tabindex="-1" scrolling="no" aria-hidden="true"></iframe>
-              <img class="case-thumb" src="assets/carwash-thumbnail.jpg" alt="CarWash MX website homepage" />
+              <video class="case-vid" muted loop playsinline preload="none" poster="assets/carwash-thumbnail.jpg">
+                <source src="film/carwash-mx.mp4" type="video/mp4" />
+              </video>
             </div>
             <div class="case-meta">
               <div class="case-tag">PREMIUM AUTO CARE</div>
@@ -576,9 +576,8 @@
 
 <script src="js/cursor.js?v=2"></script>
 <script src="js/starmap.js?v=10"></script>
-<script src="js/reveals.js?v=39"></script>
+<script src="js/reveals.js?v=40"></script>
 <script src="js/about-build.js?v=9"></script>
-<script src="js/film.js?v=16"></script>
 <script src="js/i18n.js?v=1"></script>
 
 <!-- ========== EMAILJS — contact form delivery ========== -->

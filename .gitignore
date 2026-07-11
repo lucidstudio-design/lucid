@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+.claude/
+
+# Raw screen-recording originals (compressed versions live in film/*.mp4)
+/Into Focus Vid.mp4
+/Carwash Vid.mp4
+/UNbound Portfolio Vid.mp4
