@@ -1496,6 +1496,21 @@ body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
   width: calc(100% + 2px); height: calc(100% + 2px);
   object-fit: cover; display: block;
 }
+/* UNbound + CarWash MX: a static thumbnail sits over the video at rest and fades
+   out on hover, revealing the clip beneath (which is already playing). Without
+   this layer the video's own poster only shows before the very first play — after
+   that, pausing just freezes on whatever frame it stopped at instead of the
+   thumbnail. */
+.case-thumb {
+  position: absolute; inset: -1px;
+  width: calc(100% + 2px); height: calc(100% + 2px);
+  object-fit: cover; display: block;
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.case--hovervid.is-playing .case-thumb { opacity: 0; }
 /* compact 'Visit site' link on selected project cards */
 .case-visit {
   align-self: flex-start; margin-top: 6px;
