@@ -1571,6 +1571,8 @@ body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
   .works-grid .case:hover .case-art .placeholder { transform: scale(1.06); }
 }
 /* Same hover-rise the Portfolio-tab cards have, applied to the homepage rail. */
+.portfolio-rail .case .case-art img,
+.portfolio-rail .case .case-art .placeholder { transition: transform 0.7s cubic-bezier(.22,.8,.36,1); }
 @media (hover: hover) and (pointer: fine) {
   .portfolio-rail .case {
     transition: transform 0.55s cubic-bezier(.22,.8,.36,1), box-shadow 0.55s ease;
@@ -1578,6 +1580,8 @@ body[data-lang="es"] .works-title { font-size: clamp(52px, 6.5vw, 106px); }
   .portfolio-rail .case:hover {
     transform: translateY(-8px);
   }
+  .portfolio-rail .case:hover .case-art img,
+  .portfolio-rail .case:hover .case-art .placeholder { transform: scale(1.06); }
 }
 @media (max-width: 860px) {
   .works-grid { grid-template-columns: 1fr; }
