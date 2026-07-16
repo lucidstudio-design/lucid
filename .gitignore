@@ -2,6 +2,12 @@
 **/.DS_Store
 .claude/
 
+# Raw logo originals (compressed versions live in assets/*-logo.png)
+/assets/Carwash logo.png
+/assets/Flor Tierra logo.png
+/assets/UNbound logo.png
+/assets/Abimerhi Logo.png
+
 # Raw screen-recording originals (compressed versions live in film/*.mp4)
 /Into Focus Vid.mp4
 /Carwash Vid.mp4

@@ -54,6 +54,8 @@
     "Financial Consulting": "Consultoría financiera",
 
     /* testimonial roles */
+    "Founder, Flor Tierra": "Fundadora, Flor Tierra",
+    "Coordinator, UNbound Youth Initiative": "Coordinador, UNbound Youth Initiative",
     "Independent Novelist": "Novelista independiente",
     "Event Organizer": "Organizador de eventos",
 
@@ -110,11 +112,10 @@
     [".portfolio-head h2", null, '<span class="fit-line">Hecho con intención.</span> <span class="fit-line"><em class="rui">Diseñado para durar.</em></span>'],
 
     [".t-head h2", null, '<span class="fit-line">Palabras de los <em class="rui">fundadores</em></span> <span class="fit-line">con quienes hemos construido.</span>'],
-    [".t-quote", 0, '<span style="font-style:normal">En</span> <em>proceso</em><span style="font-style:normal">...</span>'],
-    [".t-quote", 1, '<span style="font-style:normal">En</span> <em>proceso</em><span style="font-style:normal">...</span>'],
-    [".t-quote", 2, '"Lucid ha tomado nuestra visión de un sitio web simple y eficaz y <em>elevado su profesionalismo al máximo nivel,</em> garantizando a nuestros colaboradores la mejor experiencia."'],
-    [".t-quote", 3, '"Lucid renovó el diseño apagado de mi novela con sus <em>cautivadoras ilustraciones originales y dirección creativa,</em> transformando mi libro con gráficos dignos de un best-seller."'],
-    [".t-quote", 4, '"El trabajo de Lucid diseñando la identidad para nuestro evento de doscientas personas fue <em>simplemente increíble.</em> Fueron comunicativos, creativos y eficientes. Sin duda los contrataré de nuevo."'],
+    [".t-quote", 0, '"Estamos muy satisfechas con el resultado y sin duda recomendamos a Lucid a cualquier empresa o emprendedor que busque un proveedor confiable, talentoso y comprometido con entregar un trabajo de excelente calidad. <em>Lograron combinar eficiencia, creatividad y calidez humana de una manera excepcional.</em>"'],
+    [".t-quote", 1, '"Lucid ha tomado nuestra visión de un sitio web simple y eficaz y <em>elevado su profesionalismo al máximo nivel,</em> garantizando a nuestros colaboradores la mejor experiencia."'],
+    [".t-quote", 2, '"Lucid renovó el diseño apagado de mi novela con sus <em>cautivadoras ilustraciones originales y dirección creativa,</em> transformando mi libro con gráficos dignos de un best-seller."'],
+    [".t-quote", 3, '"El trabajo de Lucid diseñando la identidad para nuestro evento de doscientas personas fue <em>simplemente increíble.</em> Fueron comunicativos, creativos y eficientes. Sin duda los contrataré de nuevo."'],
 
     [".contact-head", null, '<span class="fit-line">¿Tienes una <span class="rui-accent">visión?</span> <span class="cohere">Démosle <span class="focus-word">enfoque.</span></span></span>'],
     [".contact-sub", null, "Cuéntanos sobre tu proyecto y nosotros nos encargamos del resto. Sin bots. Sin formularios que no llevan a ningún lado. Te responderemos en un máximo de dos días hábiles para agendar una consulta gratis."],

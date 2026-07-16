@@ -922,6 +922,14 @@ img { display: block; max-width: 100%; }
   font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--periwinkle); font-weight: 600;
 }
+/* Tag row with the client's logo pinned to the right (echoes the number badge). */
+.case-meta-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.case-logo {
+  width: 44px; height: 44px; border-radius: 50%;
+  flex: none; display: block;
+}
 .case h3 {
   font-family: var(--display); font-weight: 600;
   font-size: clamp(26px, 2.1vw, 40px); line-height: 1.0; letter-spacing: -0.01em;
